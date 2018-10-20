@@ -1,10 +1,3 @@
-// import Ember from 'ember';
-// import { A } from '@ember/array';
-// import { Promise } from 'rsvp';
-// import { assert, warn } from '@ember/debug';
-// import { copy } from '@ember/object/internals';
-// import { typeOf, isPresent, isNone } from '@ember/utils';
-
 import {
 	_bind,
 	_guard,
@@ -39,9 +32,8 @@ export function _queryObject(url, adapter, store, modelName, query) {
 
 export function _queryMultipleObject(url, adapter, store, modelName, query, recordArray) {
 	let modelClass = store.modelFor(modelName);
-
 	let promise;
-	if (adapter.queryMultipleObject.length > 4) {
+	if (adapter.queryMultipleObject.length > 3) {
 		recordArray = recordArray || store.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query);
 		promise = adapter.queryMultipleObject(url, store, modelClass, query, recordArray);
 	} else {
@@ -55,15 +47,16 @@ export function _queryMultipleObject(url, adapter, store, modelName, query, reco
 
 	return promise.then(adapterPayload => {
 		let serializer = serializerForAdapter(store, adapter, modelName);
-		let payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'queryMultipleObject');
-		let internalModels = store._push(payload);
+        let payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'queryMultipleObject');
 
+		let internalModels = store._push(payload);
+        
 		if (recordArray) {
 			recordArray._setInternalModels(internalModels, payload);
 		} else {
 			recordArray = store.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query, internalModels, payload);
 		}
-
+        
 		return recordArray;
 	}, null, `DS: Extract payload of query ${modelName}`);
 }
