@@ -1,6 +1,6 @@
 export default function() {
     this.post('/api/v1/login/0', (schema, request) => {
-        window.console.warn(request.requestBody);
+        // window.console.warn(request.requestBody);
         return {
             "data": [{
                 "type": "auth",
@@ -29,7 +29,7 @@ export default function() {
 
 
     this.post('/api/v1/save/0', (schema, request) => {
-        window.console.warn(request.requestBody);
+        // window.console.warn(request.requestBody);
         return {
             "data": {
                 "type": "success",

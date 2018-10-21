@@ -8,7 +8,6 @@ export default Route.extend({
     },
     model() {
         this.store.queryMultipleObject('/api/v1/login/0', 'auth', {})
-
         this.store.transaction('/api/v1/save/0', 'auth', {}).then(r => console.info(r.get('token')))
     }
 });
