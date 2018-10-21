@@ -1,5 +1,5 @@
 export default function() {
-    this.post('/api/v1/login/0', (schema, request) => {
+    this.post('/api/v1/login/0', (/*schema, request*/) => {
         // window.console.warn(request.requestBody);
         return {
             "data": [{
@@ -28,7 +28,7 @@ export default function() {
     });
 
 
-    this.post('/api/v1/save/0', (schema, request) => {
+    this.post('/api/v1/save/0', (/*schema, request*/) => {
         // window.console.warn(request.requestBody);
         return {
             "data": {
