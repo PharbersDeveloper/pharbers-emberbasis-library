@@ -7,7 +7,7 @@ export default Route.extend({
         this._super(...arguments);
     },
     model() {
-        this.get('phservice').get('Store').queryMultipleObject('/api/v1/login/0', 'auth', {})
-        // this.store.transaction('/api/v1/save/0', 'auth', {}).then(r => console.info(r.get('token')))
+        // this.get('phservice').get('Store').queryMultipleObject('/api/v1/login/0', 'auth', {}).then(data => window.console.info(data.get('firstObject').get('token')))
+        // this.store.transaction('/api/v1/save/0', 'auth', {}).then(r => window.console.info(r.get('token')))
     }
 });
