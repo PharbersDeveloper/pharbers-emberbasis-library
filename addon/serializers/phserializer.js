@@ -1,9 +1,15 @@
 import DS from 'ember-data';
 import { dasherize } from '@ember/string';
-import { assert } from '@ember/debug';
+import { assert, deprecate } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
+import { get } from '@ember/object';
+import Ember from 'ember';
 
-const typeForRelationshipMeta = function(meta) {
+export function isEnabled() {
+    return Ember.FEATURES.isEnabled(...arguments);
+}
+
+const typeForRelationshipMeta = function (meta) {
     let modelName;
 
     modelName = meta.type || meta.key;
@@ -65,5 +71,136 @@ export default DS.JSONAPISerializer.extend({
             default:
                 return this._super(store, model, payload, id, requestType);
         }
+    },
+    serializeBelongsTo(snapshot, json, relationship) {
+        let key = relationship.key;
+
+        if (this._canSerialize(key)) {
+            let belongsTo = snapshot.belongsTo(key);
+            if (belongsTo !== undefined) {
+
+                json.relationships = json.relationships || {};
+
+                let payloadKey = this._getMappedKey(key, snapshot.type);
+                if (payloadKey === key) {
+                    payloadKey = this.keyForRelationship(key, 'belongsTo', 'serialize');
+                }
+
+                let data = null;
+                if (belongsTo) {
+                    let payloadType;
+
+                    if (isEnabled("ds-payload-type-hooks")) {
+                        payloadType = this.payloadTypeFromModelName(belongsTo.modelName);
+                        let deprecatedPayloadTypeLookup = this.payloadKeyFromModelName(belongsTo.modelName);
+
+                        if (payloadType !== deprecatedPayloadTypeLookup && this._hasCustomPayloadKeyFromModelName()) {
+                            deprecate("You used payloadKeyFromModelName to serialize type for belongs-to relationship. Use payloadTypeFromModelName instead.", false, {
+                                id: 'ds.json-api-serializer.deprecated-payload-type-for-belongs-to',
+                                until: '3.0.0'
+                            });
+
+                            payloadType = deprecatedPayloadTypeLookup;
+                        }
+                    } else {
+                        payloadType = this.payloadKeyFromModelName(belongsTo.modelName);
+                    }
+
+                    data = {
+                        type: payloadType,
+                        id: belongsTo.id
+                    };
+                }
+                json.relationships[payloadKey] = { data };
+                json.included = [
+                    {
+                        id: belongsTo.id,
+                        type: this.payloadKeyFromModelName(belongsTo.modelName),
+                        attributes: belongsTo._attributes
+                    }
+                ]
+            }
+        }
+    },
+    serializeHasMany(snapshot, json, relationship) {
+        let key = relationship.key;
+        // let shouldSerializeHasMany = '_shouldSerializeHasMany';
+        // if (isEnabled("ds-check-should-serialize-relationships")) {
+        //     shouldSerializeHasMany = 'shouldSerializeHasMany';
+        // }
+
+        // if (this[shouldSerializeHasMany](snapshot, key, relationship)) {
+
+        // }
+        let hasMany = snapshot.hasMany(key);
+        if (hasMany !== undefined) {
+            json.relationships = json.relationships || {};
+
+            let payloadKey = this._getMappedKey(key, snapshot.type);
+            if (payloadKey === key && this.keyForRelationship) {
+                payloadKey = this.keyForRelationship(key, 'hasMany', 'serialize');
+            }
+
+            let data = new Array(hasMany.length);
+
+            for (let i = 0; i < hasMany.length; i++) {
+                let item = hasMany[i];
+
+                let payloadType;
+
+                if (isEnabled("ds-payload-type-hooks")) {
+                    payloadType = this.payloadTypeFromModelName(item.modelName);
+                    let deprecatedPayloadTypeLookup = this.payloadKeyFromModelName(item.modelName);
+
+                    if (payloadType !== deprecatedPayloadTypeLookup && this._hasCustomPayloadKeyFromModelName()) {
+                        deprecate("You used payloadKeyFromModelName to serialize type for belongs-to relationship. Use payloadTypeFromModelName instead.", false, {
+                            id: 'ds.json-api-serializer.deprecated-payload-type-for-has-many',
+                            until: '3.0.0'
+                        });
+
+                        payloadType = deprecatedPayloadTypeLookup;
+                    }
+                } else {
+                    payloadType = this.payloadKeyFromModelName(item.modelName);
+                }
+
+                data[i] = {
+                    type: payloadType,
+                    id: item.id
+                };
+            }
+            json.relationships[payloadKey] = { data };
+            let included = hasMany.map(data => {
+                return {
+                    id: data.id,
+                    type: this.payloadKeyFromModelName(data.modelName),
+                    attributes: data._attributes
+                }
+            })
+            json.included = included
+        }
+    },
+    serialize(snapshot, options) {
+        this._super(...arguments);
+        let json = {};
+        if (options && options.includeId) {
+            const id = snapshot.id;
+            if (id) {
+                json[get(this, 'primaryKey')] = id;
+            }
+        }
+        json.type = this.payloadKeyFromModelName(snapshot.modelName),
+            snapshot.eachAttribute((key, attribute) => {
+                this.serializeAttribute(snapshot, json, key, attribute);
+            });
+
+        snapshot.eachRelationship((key, relationship) => {
+            if (relationship.kind === 'belongsTo') {
+                this.serializeBelongsTo(snapshot, json, relationship);
+            } else if (relationship.kind === 'hasMany') {
+                this.serializeHasMany(snapshot, json, relationship);
+            }
+        });
+        return json;
     }
 })

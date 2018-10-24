@@ -1,12 +1,11 @@
 import Controller from '@ember/controller';
-import { inject } from '@ember/service';
 
 export default Controller.extend({
-    phservice: inject(),
+
     init() {
         this._super(...arguments);
         // this.JSRSA()
-        // this.BusinessLogic()
+        this.BusinessLogic()
 
     },
     JSRSA() {
@@ -34,9 +33,10 @@ export default Controller.extend({
         this.get('logger').log(uncrypted); 
     },
     BusinessLogic() {
-        const loginFunc = function() {
-            this.get('logger').log('=======> loginFunc');
+        function Func(name, age) {
+            this.get('logger').log(`Say Hi ${name}，I‘am Age ${age}`)
         }
-        this.get('phservice').get('BusinessLogic').funcInjection(loginFunc)
+        this.get('pmController').get('BusinessLogic').funcInjection(Func)
+        this.get('pmController').get('BusinessLogic').getFuncInstance('Func', 'Alex', 24)
     }
 });

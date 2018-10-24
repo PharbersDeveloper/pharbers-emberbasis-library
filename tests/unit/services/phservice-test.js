@@ -1,6 +1,6 @@
 import { moduleFor, test } from 'ember-qunit';
 
-moduleFor('service:phservice', 'Unit | Service | phservice', {
+moduleFor('service:private.phservice', 'Unit | Service | phservice', {
   // Specify the other units that are required for this test.
   // needs: ['service:foo']
 });
