@@ -155,7 +155,7 @@ export default Mixin.create({
             var ct = "";
             if (string.length > MAX_ENCRYPT_BLOCK * 2) {
                 let regex = new RegExp(`.{1,${MAX_ENCRYPT_BLOCK * 2}}`, 'g')
-                var lt = string.match(regex);  //128位解密。取256位
+                var lt = string.match(regex);
                 lt.forEach(function (entry) {
                     var t1 = k.decrypt(entry);
                     ct += t1;
