@@ -1,0 +1,6 @@
+{{!-- {{yield}} --}}
+<h1>Parent</h1>
+<button {{action "current"}}>Parent</button>
+{{yield (hash
+child=(component "parent-c/child-c")
+)}}

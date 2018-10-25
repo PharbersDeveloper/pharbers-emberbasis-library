@@ -1,1 +1,6 @@
 {{outlet}}
+{{#parent-c next=(action 'next') next2=(action 'next2') current=(action 'current') as |c| }}
+    {{#c.child }}
+        {{show-c}}
+    {{/c.child}}
+{{/parent-c}}
