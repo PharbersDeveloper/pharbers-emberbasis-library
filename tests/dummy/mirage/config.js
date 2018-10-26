@@ -6,7 +6,21 @@ export default function() {
                 "type": "auth",
                 "id": "5b7e454a8fb8076c3c3304l0",
                 "attributes": {
-                    "token": "This is proposal first.It's for test."
+                    "token": "Test 01"
+                },
+                "relationships": {
+                    "mult_data": {
+                        "data": [{
+                            "type": "multdata",
+                            "id": "001",
+                        }]
+                    }
+                }
+            },{
+                "type": "auth",
+                "id": "5b7e454a8fb8076c3c3304l1",
+                "attributes": {
+                    "token": "Test 02"
                 },
                 "relationships": {
                     "mult_data": {

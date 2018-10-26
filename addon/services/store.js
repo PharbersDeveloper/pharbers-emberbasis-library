@@ -1,7 +1,9 @@
 import DS from 'ember-data';
-import { assert } from '@ember/debug';
 import normalizeModelName from "../-private/normalize-model-name";
+import { isArray } from '@ember/array';
 import { isPresent } from '@ember/utils';
+import { assert } from '@ember/debug';
+
 
 import {
     promiseArray,
@@ -11,7 +13,15 @@ import {
 import {
     _queryObject,
     _queryMultipleObject,
-    _transaction
+    _transaction,
+    _object2JsonApi,
+    _createModel,
+    _updataModelByID,
+    _queryModelByAll,
+    _queryModelByID,
+    _removeModelByAll,
+    _removeModelByID,
+    _model2LocalStorge
 } from "../-private/store-finders";
 
 /**
@@ -263,17 +273,11 @@ export default DS.Store.extend({
      * @param {Boolean} isClean 
      */
     object2JsonApi(model, isClean = true) {
-        let serializeData = model.serialize({ includeId: true });
-
-        window.console.info(serializeData)
-
-        function cleanModel() {
-            const MODELID = serializeData.id;
-            const TYPE = serializeData.type;
-            const RELATIONSHIPS = serializeData.relationships;
-
+        function cleanModel(recordData) {
+            const MODELID = recordData.id;
+            const TYPE = recordData.type;
+            const RELATIONSHIPS = recordData.relationships;
             model.store.peekRecord(TYPE, MODELID).destroyRecord().then(rec => rec.unloadRecord());
-
             Object.keys(RELATIONSHIPS).forEach(elem => {
                 let temp = RELATIONSHIPS[elem].data;
                 if (Array.isArray(temp)) {
@@ -285,16 +289,69 @@ export default DS.Store.extend({
                 }
             })
         }
-        let data = {
-            data: {
-                id: serializeData.id,
-                type: serializeData.type,
-                attributes: serializeData.attributes,
-                relationships: serializeData.relationships
-            },
-            included: serializeData.included
+        let data = _object2JsonApi(model);
+        let modelIsArray = isArray(model)
+        if (modelIsArray) {
+            model.forEach(reocrd => {
+                if (isClean) { cleanModel(reocrd.serialize({ includeId: true })) }
+            })
+        } else {
+            if (isClean) { cleanModel(model.serialize({ includeId: true })) }
         }
-        if (isClean) { cleanModel() }
         return data
+    },
+
+    /**
+     * 创建Model
+     * @param {String} modelName 
+     * @param {Object} inputProperties 
+     */
+    createModel(modelName, inputProperties) {
+        return _createModel(this, modelName, inputProperties);
+    },
+    
+    updataModelByID(modelName, id, inputProperties) {
+        return _updataModelByID(this, modelName, id, inputProperties)
+    },
+    /**
+     * 
+     * @param {String} modelName 
+     * @param {String} id 
+     */
+    queryModelByID(modelName, id) {
+        return _queryModelByID(this, modelName, id);
+    },
+
+    /**
+     * 
+     * @param {String} modelName 
+     */
+    queryModelByAll(modelName) {
+        return _queryModelByAll(this, modelName);
+    },
+
+    /**
+     * 
+     * @param {String} modelName 
+     * @param {String} id 
+     */
+    removeModelByID(modelName, id) {
+        _removeModelByID(this, modelName, id);
+    },
+
+    /**
+     * 
+     * @param {String} modelName 
+     */
+    removeModelByAll(modelName) {
+        _removeModelByAll(this, modelName);
+    },
+
+    /**
+     * 
+     * @param {Model} modelClass 
+     */
+    model2LocalStorge(modelClass) {
+        _model2LocalStorge(modelClass)
     }
 });
