@@ -10,15 +10,16 @@ export default Route.extend({
     },
     model() {
 
-        let post = this.get('pmController').get('Store').createModel('post', {
-            id: '1',
-            name: 'Alex',
-            age: 12,
-            comments: this.get('pmController').get('Store').createModel('comment', {
-                id: '1',
-                title: 'Alex 好帅'
-            })
-        })
+        // let post = this.get('pmController').get('Store').createModel('post', {
+        //     id: '1',
+        //     name: 'Alex',
+        //     age: 12,
+        //     comments: this.get('pmController').get('Store').createModel('comment', {
+        //         id: '1',
+        //         title: 'Alex 好帅'
+        //     })
+        // })
+
         // post.get('comments').pushObject(this.get('pmController').get('Store').createModel('comment', {
         //     id: '1',
         //     title: 'Alex 好帅',
@@ -30,7 +31,7 @@ export default Route.extend({
         //     post
         // }))
     
-        this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(post, false))
+        // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(post, false))
 
         // let req = this.get('pmController').get('Store').createModel('request', {id: '1', res: 'bind_course_region_rep' });
         // let eqValues = [
