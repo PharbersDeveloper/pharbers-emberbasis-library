@@ -11,7 +11,7 @@ export default EmberObject.extend({
     },
     clean(...arg) {
         arg.forEach(key => {
-            this.get('cookies').clean(key)
+            this.get('cookies').clear(key)
         });
     }
 })
