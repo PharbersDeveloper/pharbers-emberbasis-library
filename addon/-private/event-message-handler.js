@@ -20,8 +20,8 @@ export function _lookUpComponent(instance, actionName, arg) {
         // } else {
         //     _lookUpComponent(parentView, actionName, arg)
         // }
+        // assert(`not find ${actionName}`, isexist(instance.attrs, actionName));
     }
-    assert(`not find ${actionName}`, !isexist(componet.attrs, actionName));
 }
 
 export default EmberObject.extend({
