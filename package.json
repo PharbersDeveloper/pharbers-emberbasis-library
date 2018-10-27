@@ -1,13 +1,14 @@
 {
     "name": "pharbers-emberbasis-library",
-    "version": "0.0.0",
+    "version": "1.0.0",
     "description": "The default blueprint for ember-cli addons.",
     "keywords": [
-        "ember-addon"
+        "ember-addon",
+        "pharbers-basis-library"
     ],
-    "repository": "",
+    "repository": "https://github.com/PharbersDeveloper/pharbers-emberbasis-library",
     "license": "MIT",
-    "author": "",
+    "author": "Alex",
     "directories": {
         "doc": "doc",
         "test": "tests"
@@ -23,7 +24,6 @@
         "ember-cli-babel": "^7.1.2",
         "ember-cookies": "^0.3.1",
         "jsencrypt": "^3.0.0-rc.1",
-        "node-rsa": "^1.0.1",
         "strophe.js": "^1.2.16"
     },
     "devDependencies": {

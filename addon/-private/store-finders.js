@@ -7,7 +7,7 @@ import {
 import { normalizeResponseHelper } from "./serializer-response";
 import { serializerForAdapter } from "./serializers";
 import { isArray } from '@ember/array';
-import EmberObject, { observer } from '@ember/object';
+// import EmberObject, { observer } from '@ember/object';
 
 
 /**
@@ -264,6 +264,6 @@ export function _model2LocalStorge(modelClass) {
     }
 }
 
-export function _localStorage2Model(key) {
+// export function _localStorage2Model(key) {
 
-}
+// }

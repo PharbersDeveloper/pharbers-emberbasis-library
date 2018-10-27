@@ -10,15 +10,15 @@ export default Route.extend({
     },
     model() {
 
-        // let post = this.get('pmController').get('Store').createModel('post', {
-        //     id: '1',
-        //     name: 'Alex',
-        //     age: 12,
-        //     // comments: this.get('pmController').get('Store').createModel('comment', {
-        //     //     id: '1',
-        //     //     title: 'Alex 好帅'
-        //     // })
-        // })
+        let post = this.get('pmController').get('Store').createModel('post', {
+            id: '1',
+            name: 'Alex',
+            age: 12,
+            comments: this.get('pmController').get('Store').createModel('comment', {
+                id: '1',
+                title: 'Alex 好帅'
+            })
+        })
         // post.get('comments').pushObject(this.get('pmController').get('Store').createModel('comment', {
         //     id: '1',
         //     title: 'Alex 好帅',
@@ -30,38 +30,38 @@ export default Route.extend({
         //     post
         // }))
     
-        // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(post, false))
+        this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(post, false))
 
-        let req = this.get('pmController').get('Store').createModel('request', {id: '1', res: 'bind_course_region_rep' });
-        let eqValues = [
-            { id: 1, type: 'eqcond', key: 'region_id', val: 'a' },
-            { id: 2, type: 'eqcond', key: 'course_id', val: 12 },
-        ]
-        eqValues.forEach((elem) => {
-            req.get(elem.type).pushObject(this.get('pmController').get('Store').createModel(elem.type, {
-                id: elem.id,
-                key: elem.key,
-                val: elem.val,
-            }))
-        });
-        let conditions = this.get('pmController').get('Store').object2JsonApi(req);
-        this.get('logger').log(conditions)
+        // let req = this.get('pmController').get('Store').createModel('request', {id: '1', res: 'bind_course_region_rep' });
+        // let eqValues = [
+        //     { id: 1, type: 'eqcond', key: 'region_id', val: 'a' },
+        //     { id: 2, type: 'eqcond', key: 'course_id', val: 12 },
+        // ]
+        // eqValues.forEach((elem) => {
+        //     req.get(elem.type).pushObject(this.get('pmController').get('Store').createModel(elem.type, {
+        //         id: elem.id,
+        //         key: elem.key,
+        //         val: elem.val,
+        //     }))
+        // });
+        // let conditions = this.get('pmController').get('Store').object2JsonApi(req);
+        // this.get('logger').log(conditions)
 
-        this.get('pmController').get('Store').queryMultipleObject('/api/v1/login/0', 'auth', {}).then(data =>  this.get('logger').log(data.get('firstObject').get('token')))
-        this.get('pmController').get('Store').transaction('/api/v1/save/0', 'auth', {}).then(r => this.get('logger').log(r.get('token')))
+        // this.get('pmController').get('Store').queryMultipleObject('/api/v1/login/0', 'auth', {}).then(data =>  this.get('logger').log(data.get('firstObject').get('token')))
+        // this.get('pmController').get('Store').transaction('/api/v1/save/0', 'auth', {}).then(r => this.get('logger').log(r.get('token')))
         
-        later(this, function(){
-            let temp = this.get('pmController').get('Store').queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');
-            let temp2 = this.get('pmController').get('Store').queryModelByAll('auth')
-            this.get('pmController').get('Store').model2LocalStorge(temp2);
+        // later(this, function(){
+        //     let temp = this.get('pmController').get('Store').queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');
+        //     let temp2 = this.get('pmController').get('Store').queryModelByAll('auth')
+        //     this.get('pmController').get('Store').model2LocalStorge(temp2);
 
-            let temp3 = this.get('pmController').get('Store').updataModelByID('auth', '5b7e454a8fb8076c3c3304l0', {
-                token: '/*/dasdas1d2sa15dsd5asd1asdasdfas65das5'
-            })
-            let temp4 = this.get('pmController').get('Store').updataModelByID('multdata', '001', {
-                name: '钱鹏'
-            });
+        //     let temp3 = this.get('pmController').get('Store').updataModelByID('auth', '5b7e454a8fb8076c3c3304l0', {
+        //         token: '/*/dasdas1d2sa15dsd5asd1asdasdfas65das5'
+        //     })
+        //     let temp4 = this.get('pmController').get('Store').updataModelByID('multdata', '001', {
+        //         name: '钱鹏'
+        //     });
 
-        }, 1000)
+        // }, 1000)
     }
 });

@@ -3,11 +3,12 @@ import { dasherize } from '@ember/string';
 import { assert, deprecate } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
 import { get } from '@ember/object';
-import Ember from 'ember';
+// import Ember from 'ember';
+import { isEnabled } from '@ember/canary-features'
 
-export function isEnabled() {
-    return Ember.FEATURES.isEnabled(...arguments);
-}
+// export function isEnabled() {
+//     return Ember.FEATURES.isEnabled(...arguments);
+// }
 
 const typeForRelationshipMeta = function (meta) {
     let modelName;
