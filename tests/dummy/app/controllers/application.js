@@ -5,9 +5,9 @@ export default Controller.extend({
 
     init() {
         this._super(...arguments);
-        this.JSRSA()
+        // this.JSRSA()
         // this.BusinessLogic()
-
+        // this.get('logger').log(this.get('cookie').write('ad', 'dasdsa'))
     },
     actions: {
         next(data) {
