@@ -78,6 +78,15 @@ export default DS.JSONAPISerializer.extend({
 
         if (this._canSerialize(key)) {
             let belongsTo = snapshot.belongsTo(key);
+
+            // TODO 需要递归的实现多层级的关系序列化，但是又有效率问题，先暂停
+            // belongsTo.eachRelationship((key, relationship) => {
+            //     if (relationship.kind === 'belongsTo') {
+            //         this.serializeBelongsTo(belongsTo, json, relationship, true);
+            //     } else if (relationship.kind === 'hasMany') {
+            //         this.serializeHasMany(belongsTo, json, relationship);
+            //     }
+            // });
             if (belongsTo !== undefined) {
 
                 json.relationships = json.relationships || {};
