@@ -5,6 +5,7 @@ import { DEBUG } from '@glimmer/env';
 import { get } from '@ember/object';
 // import Ember from 'ember';
 import { isEnabled } from '@ember/canary-features'
+import { A } from '@ember/array';
 
 // export function isEnabled() {
 //     return Ember.FEATURES.isEnabled(...arguments);
@@ -90,6 +91,7 @@ export default DS.JSONAPISerializer.extend({
             if (belongsTo !== undefined) {
 
                 json.relationships = json.relationships || {};
+                json.included = json.included || A();
 
                 let payloadKey = this._getMappedKey(key, snapshot.type);
                 if (payloadKey === key) {
@@ -122,13 +124,13 @@ export default DS.JSONAPISerializer.extend({
                     };
                 }
                 json.relationships[payloadKey] = { data };
-                json.included = [
+                json.included.pushObjects([
                     {
                         id: belongsTo.id,
                         type: this.payloadKeyFromModelName(belongsTo.modelName),
                         attributes: belongsTo._attributes
                     }
-                ]
+                ])
             }
         }
     },
@@ -145,6 +147,7 @@ export default DS.JSONAPISerializer.extend({
         let hasMany = snapshot.hasMany(key);
         if (hasMany !== undefined) {
             json.relationships = json.relationships || {};
+            json.included = json.included || A();
 
             let payloadKey = this._getMappedKey(key, snapshot.type);
             if (payloadKey === key && this.keyForRelationship) {
@@ -187,7 +190,7 @@ export default DS.JSONAPISerializer.extend({
                     attributes: data._attributes
                 }
             })
-            json.included = included
+            json.included.pushObjects(included)
         }
     },
     serialize(snapshot, options) {
