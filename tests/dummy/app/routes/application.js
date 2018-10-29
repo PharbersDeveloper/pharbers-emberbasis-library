@@ -9,35 +9,35 @@ export default Route.extend({
         }
     },
     model() {
-        ["北京", "上海", "广东"].forEach((name, index) => {
-            this.get('pmController').get('Store').createModel('provinces', {
-                id: (index + 1),
-                name 
-            })
-        })
+        // ["北京", "上海", "广东"].forEach((name, index) => {
+        //     this.get('pmController').get('Store').createModel('provinces', {
+        //         id: (index + 1),
+        //         name 
+        //     })
+        // })
         
-        let user_01 = this.get('pmController').get('Store').createModel('users', {
-            id: '1',
-            name: 'Alex'
-        })
-        let user_02 = this.get('pmController').get('Store').createModel('users', {
-            id: '2',
-            name: 'Alfred'
-        })
+        // let user_01 = this.get('pmController').get('Store').createModel('users', {
+        //     id: '1',
+        //     name: 'Alex'
+        // })
+        // let user_02 = this.get('pmController').get('Store').createModel('users', {
+        //     id: '2',
+        //     name: 'Alfred'
+        // })
 
-        let rg_01 = this.get('pmController').get('Store').createModel('region', {
-            id: '1',
-            province: this.get('pmController').get('Store').queryModelByID('provinces', '1')
-        })
+        // let rg_01 = this.get('pmController').get('Store').createModel('region', {
+        //     id: '1',
+        //     province: this.get('pmController').get('Store').queryModelByID('provinces', '1')
+        // })
 
-        let rg_02 = this.get('pmController').get('Store').createModel('region', {
-            id: '2',
-            province: this.get('pmController').get('Store').queryModelByID('provinces', '2')
-        })
+        // let rg_02 = this.get('pmController').get('Store').createModel('region', {
+        //     id: '2',
+        //     province: this.get('pmController').get('Store').queryModelByID('provinces', '2')
+        // })
         
-        user_01.set('region', rg_01)
-        user_02.set('region', rg_02)
-        this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(user_01, false))
+        // user_01.set('region', rg_01)
+        // user_02.set('region', rg_02)
+        // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(user_01, false))
         // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(user_02, false))
 
         // let post = this.get('pmController').get('Store').createModel('post', {
