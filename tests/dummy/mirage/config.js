@@ -1,4 +1,4 @@
-export default function() {
+export default function () {
     this.post('/api/v1/login/0', (/*schema, request*/) => {
         // window.console.warn(request.requestBody);
         return {
@@ -16,7 +16,7 @@ export default function() {
                         }]
                     }
                 }
-            },{
+            }, {
                 "type": "auth",
                 "id": "5b7e454a8fb8076c3c3304l1",
                 "attributes": {
@@ -44,14 +44,15 @@ export default function() {
 
     this.post('/api/v1/save/0', (/*schema, request*/) => {
         // window.console.warn(request.requestBody);
-        return {
-            "data": {
-                "type": "success",
-                "id": "5b7e454a8fb8076c3c3304l0",
-                "attributes": {
-                    "token": "sdasdasdasd"
-                }
-            }
-        }
+        // return {
+        //     "data": {
+        //         "type": "success",
+        //         "id": "5b7e454a8fb8076c3c3304l0",
+        //         "attributes": {
+        //             "token": "sdasdasdasd"
+        //         }
+        //     }
+        // }
+        return { "errors": [{ "id": "500", "status": "error", "code": "-301", "title": "user email has been use", "detail": "用户邮箱已被使用" }] }
     });
 }

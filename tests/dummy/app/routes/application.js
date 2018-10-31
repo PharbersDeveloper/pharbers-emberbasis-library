@@ -9,35 +9,35 @@ export default Route.extend({
         }
     },
     model() {
-        // ["北京", "上海", "广东"].forEach((name, index) => {
-        //     this.get('pmController').get('Store').createModel('provinces', {
-        //         id: (index + 1),
-        //         name 
-        //     })
-        // })
-        
-        // let user_01 = this.get('pmController').get('Store').createModel('users', {
-        //     id: '1',
-        //     name: 'Alex'
-        // })
+        ["北京", "上海", "广东"].forEach((name, index) => {
+            this.get('pmController').get('Store').createModel('provinces', {
+                id: (index + 1),
+                name
+            })
+        })
+
+        let user_01 = this.get('pmController').get('Store').createModel('users', {
+            id: '1',
+            name: 'Alex'
+        })
         // let user_02 = this.get('pmController').get('Store').createModel('users', {
         //     id: '2',
         //     name: 'Alfred'
         // })
 
-        // let rg_01 = this.get('pmController').get('Store').createModel('region', {
-        //     id: '1',
-        //     province: this.get('pmController').get('Store').queryModelByID('provinces', '1')
-        // })
+        let rg_01 = this.get('pmController').get('Store').createModel('region', {
+            id: '1',
+            province: this.get('pmController').get('Store').queryModelByID('provinces', '1')
+        })
 
         // let rg_02 = this.get('pmController').get('Store').createModel('region', {
         //     id: '2',
         //     province: this.get('pmController').get('Store').queryModelByID('provinces', '2')
         // })
-        
-        // user_01.set('region', rg_01)
+
+        user_01.set('region', rg_01)
         // user_02.set('region', rg_02)
-        // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(user_01, false))
+        this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(user_01), false)
         // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(user_02, false))
 
         // let post = this.get('pmController').get('Store').createModel('post', {
@@ -60,35 +60,37 @@ export default Route.extend({
         //     title: 'Alfred 好帅',
         //     post
         // }))
-    
+
         // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(post, false))
 
-        let req = this.get('pmController').get('Store').createModel('request', {
-            id: '1', 
-            res: 'bind_course_region_rep',
-            fmcond: this.get('pmController').get('Store').createModel('fmcond', {
-                id: '1',
-                skip: 0,
-                take: 1000
-            })
-        });
-        let eqValues = [
-            { id: 1, type: 'eqcond', key: 'region_id', val: 'a' },
-            { id: 2, type: 'eqcond', key: 'course_id', val: 12 },
-        ]
-        eqValues.forEach((elem) => {
-            req.get(elem.type).pushObject(this.get('pmController').get('Store').createModel(elem.type, {
-                id: elem.id,
-                key: elem.key,
-                val: elem.val,
-            }))
-        });
-        let conditions = this.get('pmController').get('Store').object2JsonApi(req);
-        this.get('logger').log(conditions)
+        // let req = this.get('pmController').get('Store').createModel('request', {
+        //     id: '1', 
+        //     res: 'bind_course_region_rep',
+        //     fmcond: this.get('pmController').get('Store').createModel('fmcond', {
+        //         id: '1',
+        //         skip: 0,
+        //         take: 1000
+        //     })
+        // });
+        // let eqValues = [
+        //     { id: 1, type: 'eqcond', key: 'region_id', val: 'a' },
+        //     { id: 2, type: 'eqcond', key: 'course_id', val: 12 },
+        // ]
+        // eqValues.forEach((elem) => {
+        //     req.get(elem.type).pushObject(this.get('pmController').get('Store').createModel(elem.type, {
+        //         id: elem.id,
+        //         key: elem.key,
+        //         val: elem.val,
+        //     }))
+        // });
+        // let conditions = this.get('pmController').get('Store').object2JsonApi(req);
+        // this.get('logger').log(conditions)
 
         // this.get('pmController').get('Store').queryMultipleObject('/api/v1/login/0', 'auth', {}).then(data =>  this.get('logger').log(data.get('firstObject').get('token')))
-        // this.get('pmController').get('Store').transaction('/api/v1/save/0', 'auth', {}).then(r => this.get('logger').log(r.get('token')))
-        
+        this.get('pmController').get('Store').transaction('/api/v1/save/0', 'auth', {}).then(r => {
+            this.get('logger').log(r)
+        })
+
         // later(this, function(){
         //     let temp = this.get('pmController').get('Store').queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');
         //     let temp2 = this.get('pmController').get('Store').queryModelByAll('auth')

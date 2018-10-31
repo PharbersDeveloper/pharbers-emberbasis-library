@@ -3,13 +3,8 @@ import { dasherize } from '@ember/string';
 import { assert, deprecate } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
 import { get } from '@ember/object';
-// import Ember from 'ember';
 import { isEnabled } from '@ember/canary-features'
 import { A } from '@ember/array';
-
-// export function isEnabled() {
-//     return Ember.FEATURES.isEnabled(...arguments);
-// }
 
 const typeForRelationshipMeta = function(meta) {
 	let modelName;
@@ -67,6 +62,7 @@ export default DS.JSONAPISerializer.extend({
 		return relationships;
 	},
 	normalizeResponse(store, model, payload, id, requestType) {
+        debugger
 		switch (requestType) {
 			case 'queryObject':
 				return this.normalizeQueryRecordResponse(store, model, payload, id, requestType);
@@ -78,25 +74,18 @@ export default DS.JSONAPISerializer.extend({
 				return this._super(store, model, payload, id, requestType);
 		}
 	},
-	serializeBelongsTo(snapshot, json, relationship) {
+	serializeBelongsTo(snapshot, json, relationship, isRecursive = false) {
 		let key = relationship.key;
 
 		if (this._canSerialize(key)) {
 			let belongsTo = snapshot.belongsTo(key);
 
-			// TODO 需要递归的实现多层级的关系序列化，但是又有效率问题，先暂停
-			// belongsTo.eachRelationship((key, relationship) => {
-			//     if (relationship.kind === 'belongsTo') {
-			//         this.serializeBelongsTo(belongsTo, json, relationship, true);
-			//     } else if (relationship.kind === 'hasMany') {
-			//         this.serializeHasMany(belongsTo, json, relationship);
-			//     }
-			// });
 			if (belongsTo !== undefined) {
-
-				json.relationships = json.relationships || {};
-				json.included = json.included || A();
-
+                if (!isRecursive) {
+                    json.relationships = json.relationships || {};
+				    json.included = json.included || A();
+                }
+                let payloadType;
 				let payloadKey = this._getMappedKey(key, snapshot.type);
 				if (payloadKey === key) {
 					payloadKey = this.keyForRelationship(key, 'belongsTo', 'serialize');
@@ -104,8 +93,6 @@ export default DS.JSONAPISerializer.extend({
 
 				let data = null;
 				if (belongsTo) {
-					let payloadType;
-
 					if (isEnabled("ds-payload-type-hooks")) {
 						payloadType = this.payloadTypeFromModelName(belongsTo.modelName);
 						let deprecatedPayloadTypeLookup = this.payloadKeyFromModelName(belongsTo.modelName);
@@ -121,18 +108,38 @@ export default DS.JSONAPISerializer.extend({
 					} else {
 						payloadType = this.payloadKeyFromModelName(belongsTo.modelName);
 					}
-
+                    
 					data = {
 						type: payloadType,
 						id: belongsTo.id
 					};
-				}
-				json.relationships[payloadKey] = { data };
+                }
+                if (!isRecursive) {
+                    json.relationships[payloadKey] = { data };
+                } else {
+                    let tt = json.included.find(elem => elem.type === snapshot.modelName);
+                    tt.relationships = tt.relationships || {};
+                    tt.relationships[payloadKey] = {
+                        type: payloadType,
+                        id: belongsTo.id
+                    }
+                }
+				
 				json.included.pushObjects([{
 					id: belongsTo.id,
 					type: this.payloadKeyFromModelName(belongsTo.modelName),
-					attributes: belongsTo._attributes
-				}])
+                    attributes: belongsTo._attributes,
+                }])
+
+                // TODO 需要递归的实现多层级的关系序列化，但是又有效率问题，先暂停
+                belongsTo.eachRelationship((key, relationship) => {
+                    // debugger
+                    if (relationship.kind === 'belongsTo') {
+                        this.serializeBelongsTo(belongsTo, json, relationship, true);
+                    } else if (relationship.kind === 'hasMany') {
+                        this.serializeHasMany(belongsTo, json, relationship);
+                    }
+                });
 			}
 		}
 	},
