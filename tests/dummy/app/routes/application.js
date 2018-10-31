@@ -6,7 +6,17 @@ export default Route.extend({
     actions: {
         next(data) {
             this.get('logger').log(data)
-        }
+        },
+        // error(error, transition) {
+        //     this.get('logger').log(error)
+        //     // return this._super(...arguments);
+        //     // if (error instanceof MaintenanceError) {
+        //     // //   this.transitionTo('under-maintenance');
+        //     //   return;
+        //     // }
+      
+        //     // ...other error handling logic
+        //   }
     },
     model() {
         ["北京", "上海", "广东"].forEach((name, index) => {
@@ -38,6 +48,7 @@ export default Route.extend({
         user_01.set('region', rg_01)
         // user_02.set('region', rg_02)
         this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(user_01), false)
+            
         // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(user_02, false))
 
         // let post = this.get('pmController').get('Store').createModel('post', {
@@ -87,8 +98,10 @@ export default Route.extend({
         // this.get('logger').log(conditions)
 
         // this.get('pmController').get('Store').queryMultipleObject('/api/v1/login/0', 'auth', {}).then(data =>  this.get('logger').log(data.get('firstObject').get('token')))
-        this.get('pmController').get('Store').transaction('/api/v1/save/0', 'auth', {}).then(r => {
-            this.get('logger').log(r)
+        return this.get('pmController').get('Store').transaction('/api/v1/save/0', 'auth', {})
+        .then(() => { })
+        .catch(data => {
+            return data
         })
 
         // later(this, function(){
@@ -104,5 +117,6 @@ export default Route.extend({
         //     });
 
         // }, 1000)
-    }
+    },
+ 
 });

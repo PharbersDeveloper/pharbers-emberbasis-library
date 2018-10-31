@@ -62,7 +62,6 @@ export default DS.JSONAPISerializer.extend({
 		return relationships;
 	},
 	normalizeResponse(store, model, payload, id, requestType) {
-        debugger
 		switch (requestType) {
 			case 'queryObject':
 				return this.normalizeQueryRecordResponse(store, model, payload, id, requestType);

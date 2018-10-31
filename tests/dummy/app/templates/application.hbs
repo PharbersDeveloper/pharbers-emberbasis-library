@@ -4,3 +4,10 @@
         {{show-c}}
     {{/c.child}}
 {{/parent-c}}
+
+{{#each model.errors as |error|}}
+    {{log error}}
+  <div class="error">
+    {{error.code}}
+  </div>
+{{/each}}
