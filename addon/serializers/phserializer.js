@@ -82,7 +82,7 @@ export default DS.JSONAPISerializer.extend({
 			if (belongsTo !== undefined) {
                 if (!isRecursive) {
                     json.relationships = json.relationships || {};
-				    json.included = json.included || A();
+                    json.included = json.included || A();
                 }
                 let payloadType;
 				let payloadKey = this._getMappedKey(key, snapshot.type);

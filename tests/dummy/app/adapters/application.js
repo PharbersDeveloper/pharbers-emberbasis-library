@@ -42,9 +42,7 @@ export default DS.JSONAPIAdapter.extend({
         this.set('headers.Authorization', "bearer " + this.get('cookies').read('token'))
         return new rsvp.Promise((resolve, reject) => {
             this.ajax(url, 'POST', { data: jsonObject })
-                .then(data => {
-                    return InvalidError(resolve, reject, data)
-                })
+                .then(data => InvalidError(resolve, reject, data))
                 .catch(() => reject('failed'))
         });
     },
