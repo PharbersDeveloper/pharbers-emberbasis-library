@@ -1,6 +1,5 @@
 import EmberObject from '@ember/object';
 import { A } from '@ember/array';
-import { assert } from '@ember/debug';
 
 export function isexist(attrs, name) {
     return A(Object.keys(attrs)).any(o => o === name)
