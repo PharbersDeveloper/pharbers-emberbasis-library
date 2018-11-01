@@ -109,28 +109,28 @@ export default Route.extend({
 
         // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(post, false))
 
-        // let req = this.get('pmController').get('Store').createModel('request', {
-        //     id: '1', 
-        //     res: 'bind_course_region_rep',
-        //     fmcond: this.get('pmController').get('Store').createModel('fmcond', {
-        //         id: '1',
-        //         skip: 0,
-        //         take: 1000
-        //     })
-        // });
-        // let eqValues = [
-        //     { id: 1, type: 'eqcond', key: 'region_id', val: 'a' },
-        //     { id: 2, type: 'eqcond', key: 'course_id', val: 12 },
-        // ]
-        // eqValues.forEach((elem) => {
-        //     req.get(elem.type).pushObject(this.get('pmController').get('Store').createModel(elem.type, {
-        //         id: elem.id,
-        //         key: elem.key,
-        //         val: elem.val,
-        //     }))
-        // });
-        // let conditions = this.get('pmController').get('Store').object2JsonApi(req);
-        // this.get('logger').log(conditions)
+        let req = this.get('pmController').get('Store').createModel('request', {
+            id: '1', 
+            res: 'bind_course_region_rep',
+            fmcond: this.get('pmController').get('Store').createModel('fmcond', {
+                id: '1',
+                skip: 0,
+                take: 1000
+            })
+        });
+        let eqValues = [
+            { id: 1, type: 'eqcond', key: 'region_id', val: 'a' },
+            { id: 2, type: 'eqcond', key: 'course_id', val: 12 },
+        ]
+        eqValues.forEach((elem) => {
+            req.get(elem.type).pushObject(this.get('pmController').get('Store').createModel(elem.type, {
+                id: elem.id,
+                key: elem.key,
+                val: elem.val,
+            }))
+        });
+        let conditions = this.get('pmController').get('Store').object2JsonApi(req);
+        this.get('logger').log(conditions)
 
         // this.get('pmController').get('Store').queryMultipleObject('/api/v1/login/0', 'auth', {}).then(data =>  this.get('logger').log(data.get('firstObject').get('token')))
         return this.get('pmController').get('Store').transaction('/api/v1/save/0', 'auth', {})
