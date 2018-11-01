@@ -73,7 +73,7 @@ export default DS.JSONAPISerializer.extend({
 				return this._super(store, model, payload, id, requestType);
 		}
 	},
-	serializeBelongsTo(snapshot, json, relationship, isRecursive = false) {
+	serializeBelongsTo(snapshot, json, relationship, isRecursive = false, types = []) {
 		let key = relationship.key;
 
 		if (this._canSerialize(key)) {
@@ -115,13 +115,13 @@ export default DS.JSONAPISerializer.extend({
                 }
                 if (!isRecursive) {
                     json.relationships[payloadKey] = { data };
+                    types.push({id: snapshot.id, type: snapshot.modelName});
                 } else {
-                    let tt = json.included.find(elem => elem.type === snapshot.modelName);
-                    tt.relationships = tt.relationships || {};
-                    tt.relationships[payloadKey] = {
-                        type: payloadType,
-                        id: belongsTo.id
-                    }
+                    let tt = json.included.filter(elem => elem.id === snapshot.id && elem.type === snapshot.modelName);
+                    tt.forEach(elem => {
+                        elem.relationships = elem.relationships || {};
+                        elem.relationships[payloadKey] = { data }
+                    });
                 }
 				
 				json.included.pushObjects([{
@@ -129,33 +129,29 @@ export default DS.JSONAPISerializer.extend({
 					type: this.payloadKeyFromModelName(belongsTo.modelName),
                     attributes: belongsTo._attributes,
                 }])
+                types.push(data)
 
                 // TODO 需要递归的实现多层级的关系序列化，但是又有效率问题，先暂停
                 belongsTo.eachRelationship((key, relationship) => {
-                    // debugger
-                    if (relationship.kind === 'belongsTo') {
-                        this.serializeBelongsTo(belongsTo, json, relationship, true);
-                    } else if (relationship.kind === 'hasMany') {
-                        this.serializeHasMany(belongsTo, json, relationship);
+                    let isExits = types.filter(elem => belongsTo.id === elem.id && elem.type === relationship.type).length
+                    if (relationship.kind === 'belongsTo' && isExits == 0) {
+                        this.serializeBelongsTo(belongsTo, json, relationship, true, types);
+                    } else if (relationship.kind === 'hasMany' && isExits == 0) {
+                        this.serializeHasMany(belongsTo, json, relationship, true, types);
                     }
                 });
 			}
 		}
 	},
-	serializeHasMany(snapshot, json, relationship) {
+	serializeHasMany(snapshot, json, relationship, isRecursive = false, types = []) {
 		let key = relationship.key;
-		// let shouldSerializeHasMany = '_shouldSerializeHasMany';
-		// if (isEnabled("ds-check-should-serialize-relationships")) {
-		//     shouldSerializeHasMany = 'shouldSerializeHasMany';
-		// }
-
-		// if (this[shouldSerializeHasMany](snapshot, key, relationship)) {
-
-		// }
+		
 		let hasMany = snapshot.hasMany(key);
 		if (hasMany !== undefined) {
-			json.relationships = json.relationships || {};
-			json.included = json.included || A();
+            if (!isRecursive) {
+                json.relationships = json.relationships || {};
+                json.included = json.included || A();
+            }
 
 			let payloadKey = this._getMappedKey(key, snapshot.type);
 			if (payloadKey === key && this.keyForRelationship) {
@@ -188,17 +184,39 @@ export default DS.JSONAPISerializer.extend({
 				data[i] = {
 					type: payloadType,
 					id: item.id
-				};
-			}
-			json.relationships[payloadKey] = { data };
-			let included = hasMany.map(data => {
-				return {
-					id: data.id,
-					type: this.payloadKeyFromModelName(data.modelName),
-					attributes: data._attributes
-				}
-			})
-			json.included.pushObjects(included)
+                };
+
+
+                if (!isRecursive) {
+                    json.relationships[payloadKey] = { data };
+                    types.push({id: snapshot.id, type: snapshot.modelName});
+                } else {
+                    let tt = json.included.find(elem => elem.id === snapshot.id && elem.type === snapshot.modelName);
+                    tt.relationships = tt.relationships || {};
+                    tt.relationships[payloadKey] = { data }
+                }
+
+                json.included.pushObject({
+                    id: item.id,
+                    type: this.payloadKeyFromModelName(item.modelName),
+                    attributes: item._attributes
+                })
+    
+                types.push({
+					type: payloadType,
+					id: item.id
+                })
+                
+                // TODO 需要递归的实现多层级的关系序列化，但是又有效率问题，先暂停
+                item.eachRelationship((key, relationship) => {
+                    let isExits = types.filter(elem => item.id === elem.id && elem.type === relationship.type).length
+                    if (relationship.kind === 'belongsTo' && isExits == 0) {
+                        this.serializeBelongsTo(item, json, relationship, true, types);
+                    } else if (relationship.kind === 'hasMany' && isExits == 0) {
+                        this.serializeHasMany(item, json, relationship, true, types);
+                    }
+                });
+			}                        
 		}
 	},
 	serialize(snapshot, options) {
@@ -214,7 +232,6 @@ export default DS.JSONAPISerializer.extend({
 			snapshot.eachAttribute((key, attribute) => {
 				this.serializeAttribute(snapshot, json, key, attribute);
 			});
-
 		snapshot.eachRelationship((key, relationship) => {
 			if (relationship.kind === 'belongsTo') {
 				this.serializeBelongsTo(snapshot, json, relationship);

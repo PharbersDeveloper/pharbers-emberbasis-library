@@ -40,16 +40,51 @@ export default Route.extend({
             province: this.get('pmController').get('Store').queryModelByID('provinces', '1')
         })
 
-        // let rg_02 = this.get('pmController').get('Store').createModel('region', {
-        //     id: '2',
-        //     province: this.get('pmController').get('Store').queryModelByID('provinces', '2')
-        // })
+        let rg_02 = this.get('pmController').get('Store').createModel('region', {
+            id: '2',
+            province: this.get('pmController').get('Store').queryModelByID('provinces', '2')
+        })
 
         user_01.set('region', rg_01)
         // user_02.set('region', rg_02)
-        this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(user_01), false)
-            
+        // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(user_01), false);
         // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(user_02, false))
+
+
+        let p_01 = this.get('pmController').get('Store').createModel('people', {
+            id: '1',
+            name: 'Alex'
+        })
+
+        let post = this.get('pmController').get('Store').createModel('post', {
+            id: '1',
+            name: 'Alex',
+            age: 12,
+            // comments: this.get('pmController').get('Store').createModel('comment', {
+            //     id: '1',
+            //     title: 'Alex 好帅'
+            // })
+        })
+
+
+        post.get('comments').pushObject(this.get('pmController').get('Store').createModel('comment', {
+            id: '1',
+            title: 'Alex 好帅',
+            post
+        }))
+        post.get('comments').pushObject(this.get('pmController').get('Store').createModel('comment', {
+            id: '2',
+            title: 'Alfred 好帅',
+            post
+        }))
+
+        p_01.get('regions').pushObject(rg_01)
+        p_01.get('regions').pushObject(rg_02)
+        p_01.set('post', post)
+
+        this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(p_01, false))
+
+        
 
         // let post = this.get('pmController').get('Store').createModel('post', {
         //     id: '1',
