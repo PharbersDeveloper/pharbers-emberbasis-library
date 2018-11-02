@@ -10,8 +10,11 @@ export default EmberObject.extend({
         this.get('cookies').write(key, data, options);
     },
     clean(...arg) {
-        arg.forEach(key => {
-            this.get('cookies').clear(key)
-        });
+        let _this = this;
+        return function(option = {}) {
+            arg.forEach(key => {
+                _this.get('cookies').clear(key, option)
+            });
+        }
     }
 })
