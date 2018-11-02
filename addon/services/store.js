@@ -276,7 +276,7 @@ export default DS.Store.extend({
         function cleanModel(recordData) {
             const MODELID = recordData.id;
             const TYPE = recordData.type;
-            const RELATIONSHIPS = recordData.relationships;
+            const RELATIONSHIPS = recordData.relationships || {};
             model.store.peekRecord(TYPE, MODELID).destroyRecord().then(rec => rec.unloadRecord());
             Object.keys(RELATIONSHIPS).forEach(elem => {
                 let temp = RELATIONSHIPS[elem].data;
