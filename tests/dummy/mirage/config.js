@@ -25,7 +25,7 @@ export default function () {
                 "relationships": {
                     "mult_data": {
                         "data": [{
-                            "type": "multdata",
+                            "type": "multdata", //multdatum
                             "id": "001",
                         }]
                     }

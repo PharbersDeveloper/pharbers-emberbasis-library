@@ -6,9 +6,9 @@ export default Controller.extend({
     init() {
         this._super(...arguments);
         // this.JSRSA()
-        // this.BusinessLogic()
+        this.BusinessLogic()
         // this.get('logger').log(this.get('cookie').write('ad', 'dasdsa'))
-        this.get('cookie').write('aa', 'bb', { path: '/' })
+        // this.get('cookie').write('aa', 'bb', { path: '/' })
     },
     actions: {
         next(data) {
@@ -25,8 +25,8 @@ export default Controller.extend({
 
     },
     JSRSA() {
-        let PublicKey = `MFwwDQYJKoZIhvcNAQEBBQADSwAwSAJBAK9L5z4lVKzUdffDqndr78I+ovAZ9W/AOTf9AYqOWgw1ZzJuHSHZL8iCtkfSR9KMsLC/wxsNHigUFyKsaTWFIi8CAwEAAQ==`;
-        let PrivateKey = `MIIBVAIBADANBgkqhkiG9w0BAQEFAASCAT4wggE6AgEAAkEAr0vnPiVUrNR198Oqd2vvwj6i8Bn1b8A5N/0Bio5aDDVnMm4dIdkvyIK2R9JH0oywsL/DGw0eKBQXIqxpNYUiLwIDAQABAkAex1ID3GQgsHFCHo3ox//h+EN9quEoTPT++qJxpIr1B4T6DAUOzuI68/eZy5MGpUvi4vhtmYn9mrbVeqZnrcDBAiEA2hUHPCoDjSibsp1o5IMhgIXlnKsz7+9UgC+FW6vDgOECIQDNxnWaq53Q27LmFP6mM/sHDN2uMx0nvphKhqQ9vaI1DwIhANIHgIFMAUGYg2LhQJ0bQU+zJLDfHVUNzPbrTWc9JDthAiAHlSuaQn6zRpVGEzn7B+lVLi0xESMe5tAX1vRQbh9/EwIgf2TdQUtdoCDGHQA6NrEZ8jqMX4opbwa8WqqNewuBXPw=`;
+        let PublicKey = ``
+        let PrivateKey = ``
         let RSA = this.get('pmController').get('RSA');
         RSA.setPublicKey(PublicKey)
 

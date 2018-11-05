@@ -132,10 +132,12 @@ export default Route.extend({
         let conditions = this.get('pmController').get('Store').object2JsonApi(req);
         this.get('logger').log(conditions)
 
-        // this.get('pmController').get('Store').queryMultipleObject('/api/v1/login/0', 'auth', {}).then(data =>  this.get('logger').log(data.get('firstObject').get('token')))
+        this.get('pmController').get('Store').queryMultipleObject('/api/v1/login/0', 'auth', {}).then(data =>  this.get('logger').log(data.get('firstObject').get('token')))
+        
         return this.get('pmController').get('Store').transaction('/api/v1/save/0', 'auth', {})
         .then(() => { })
         .catch(data => {
+            this.get('logger').log(data)
             return data
         })
 
