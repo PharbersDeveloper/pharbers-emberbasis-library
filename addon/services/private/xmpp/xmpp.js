@@ -62,10 +62,10 @@ export default Service.extend({
     },
     /**
      * 现在只支持文字发送
-     * @param  {[type]} to            [description]
-     * @param  {[type]} conent        [description]
-     * @param  {String} [type='chat'] [description]
-     * @return {[type]}               [description]
+     * @param  {String} to
+     * @param  {String} conent
+     * @param  {String} [type='chat']
+     * @return {Boolean}
      */
     send(to, conent, type = 'chat') {
         let msg = $msg({
