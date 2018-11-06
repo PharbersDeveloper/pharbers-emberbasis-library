@@ -1,8 +1,10 @@
 import Route from '@ember/routing/route';
 import { later } from '@ember/runloop';
 import { A } from '@ember/array';
+import { inject } from '@ember/service';
 
 export default Route.extend({
+    pmc: inject(),
     actions: {
         next(data) {
             this.get('logger').log(data)
@@ -134,12 +136,12 @@ export default Route.extend({
 
         this.get('pmController').get('Store').queryMultipleObject('/api/v1/login/0', 'auth', {}).then(data =>  this.get('logger').log(data.get('firstObject').get('token')))
         
-        return this.get('pmController').get('Store').transaction('/api/v1/save/0', 'auth', {})
-        .then(() => { })
-        .catch(data => {
-            this.get('logger').log(data)
-            return data
-        })
+        // return this.get('pmController').get('Store').transaction('/api/v1/save/0', 'auth', {})
+        // .then(() => { })
+        // .catch(data => {
+        //     this.get('logger').log(data)
+        //     return data
+        // })
 
         // later(this, function(){
         //     let temp = this.get('pmController').get('Store').queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');

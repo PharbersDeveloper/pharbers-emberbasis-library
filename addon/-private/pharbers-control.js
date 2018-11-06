@@ -1,6 +1,8 @@
-import Service, { inject } from '@ember/service';
+import EmberObject from '@ember/object';
+import { inject } from '@ember/service';
 
-export default Service.extend({
+
+export default EmberObject.extend({
     // RSA加密解密 Service
     RSA: inject('private.rsa.rsa'),
 
@@ -12,4 +14,4 @@ export default Service.extend({
 
     // 商务逻辑Service Business logic
     BusinessLogic: inject('private.business.buslogic')
-});
+})
