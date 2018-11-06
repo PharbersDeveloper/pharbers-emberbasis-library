@@ -41,7 +41,6 @@ export default function () {
         }
     });
 
-
     this.post('/api/v1/save/0', (/*schema, request*/) => {
         // window.console.warn(request.requestBody);
         // return {
