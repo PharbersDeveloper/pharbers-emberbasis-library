@@ -58,7 +58,7 @@ export function _queryObject(url, adapter, store, modelName, query) {
 export function _queryMultipleObject(url, adapter, store, modelName, query, recordArray) {
     let modelClass = store.modelFor(modelName);
     let promise;
-    if (adapter.queryMultipleObject.length > 4) {
+    if (adapter.queryMultipleObject.length > 4 ) {
         recordArray = recordArray || store.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query);
         promise = adapter.queryMultipleObject(url, store, modelClass, query, recordArray);
     } else {
