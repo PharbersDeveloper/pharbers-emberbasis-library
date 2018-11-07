@@ -1,5 +1,5 @@
 import PharbersSerializer from 'pharbers-emberbasis-library/serializers/phserializer';
-
+import { dasherize } from '@ember/string';
 
 /**
  * 所有的Serializer都要继承phserializer
@@ -8,5 +8,16 @@ import PharbersSerializer from 'pharbers-emberbasis-library/serializers/phserial
  */
 
 export default PharbersSerializer.extend({
-
+    keyForAttribute(key) {
+		return key
+	},
+	keyForRelationship(key) {
+		return key
+	},
+	payloadKeyFromModelName(modelName) {
+		return modelName
+	},
+	modelNameFromPayloadKey(modelName) {
+		return dasherize(modelName);
+	},
 });
