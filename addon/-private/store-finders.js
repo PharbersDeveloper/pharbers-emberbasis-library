@@ -7,7 +7,6 @@ import {
 import { normalizeResponseHelper } from "./serializer-response";
 import { serializerForAdapter } from "./serializers";
 import { isArray } from '@ember/array';
-// import EmberObject, { observer } from '@ember/object';
 
 
 /**
@@ -158,15 +157,6 @@ export function _object2JsonApi(model) {
         }
     }
     return data;
-    // return {
-    //     data: {
-    //         id: serializeData.id,
-    //         type: serializeData.type,
-    //         attributes: serializeData.attributes,
-    //         relationships: serializeData.relationships
-    //     },
-    //     included: serializeData.included
-    // }
 }
 
 /**
