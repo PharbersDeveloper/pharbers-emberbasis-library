@@ -25,7 +25,7 @@ export default function () {
                 "relationships": {
                     "mult_data": {
                         "data": [{
-                            "type": "multdata",
+                            "type": "multdata", //multdatum
                             "id": "001",
                         }]
                     }
@@ -40,7 +40,6 @@ export default function () {
             }]
         }
     });
-
 
     this.post('/api/v1/save/0', (/*schema, request*/) => {
         // window.console.warn(request.requestBody);

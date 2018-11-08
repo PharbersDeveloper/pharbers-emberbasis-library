@@ -13,6 +13,7 @@ export function InvalidError(resolve, reject, data) {
 export default DS.JSONAPIAdapter.extend({
     cookies: inject(),
     handleResponse() {
+        // 500 501 - 504
         return this._super(...arguments);
     },
     init() {

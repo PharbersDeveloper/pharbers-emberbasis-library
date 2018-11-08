@@ -7,7 +7,6 @@ import {
 import { normalizeResponseHelper } from "./serializer-response";
 import { serializerForAdapter } from "./serializers";
 import { isArray } from '@ember/array';
-// import EmberObject, { observer } from '@ember/object';
 
 
 /**
@@ -18,11 +17,11 @@ import { isArray } from '@ember/array';
 /**
  * 单个查询
  * 连接后端
- * @param {String} url 
- * @param {Ember Object/Adapter} adapter 
- * @param {Ember Object/DS.Store} store 
- * @param {String} modelName 
- * @param {String} query 
+ * @param {String} url
+ * @param {Ember Object/Adapter} adapter
+ * @param {Ember Object/DS.Store} store
+ * @param {String} modelName
+ * @param {String} query
  * @returns {Promise}
  */
 export function _queryObject(url, adapter, store, modelName, query) {
@@ -47,18 +46,18 @@ export function _queryObject(url, adapter, store, modelName, query) {
 /**
  * 列表查询
  * 连接后端
- * @param {String} url 
- * @param {Ember Object/Adapter} adapter 
- * @param {Ember Object/DS.Store} store 
- * @param {String} modelName 
- * @param {String} query 
- * @param {Array} recordArray 
+ * @param {String} url
+ * @param {Ember Object/Adapter} adapter
+ * @param {Ember Object/DS.Store} store
+ * @param {String} modelName
+ * @param {String} query
+ * @param {Array} recordArray
  * @returns {Promise}
  */
 export function _queryMultipleObject(url, adapter, store, modelName, query, recordArray) {
     let modelClass = store.modelFor(modelName);
     let promise;
-    if (adapter.queryMultipleObject.length > 3) {
+    if (adapter.queryMultipleObject.length > 4 ) {
         recordArray = recordArray || store.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query);
         promise = adapter.queryMultipleObject(url, store, modelClass, query, recordArray);
     } else {
@@ -89,11 +88,11 @@ export function _queryMultipleObject(url, adapter, store, modelName, query, reco
 /**
  * 事务处理（新增、修改、删除）
  * 连接后端
- * @param {String} url 
- * @param {Ember Object/Adapter} adapter 
- * @param {Ember Object/DS.Store} store 
- * @param {String} modelName 
- * @param {String} query 
+ * @param {String} url
+ * @param {Ember Object/Adapter} adapter
+ * @param {Ember Object/DS.Store} store
+ * @param {String} modelName
+ * @param {String} query
  * @returns {Promise}
  */
 export function _transaction(url, adapter, store, modelName, query) {
@@ -116,9 +115,9 @@ export function _transaction(url, adapter, store, modelName, query) {
 }
 
 /**
- * 
+ *
  * @param {Ember Object/Serialize} serializeData
- * @returns {Object} 
+ * @returns {Object}
  */
 export function _object2JsonApi(model) {
     let data = {};
@@ -158,22 +157,13 @@ export function _object2JsonApi(model) {
         }
     }
     return data;
-    // return {
-    //     data: {
-    //         id: serializeData.id,
-    //         type: serializeData.type,
-    //         attributes: serializeData.attributes,
-    //         relationships: serializeData.relationships
-    //     },
-    //     included: serializeData.included
-    // }
 }
 
 /**
  * 创建Model
- * @param {Ember Object/DS.Store} store 
- * @param {String} modelName 
- * @param {Object} inputProperties 
+ * @param {Ember Object/DS.Store} store
+ * @param {String} modelName
+ * @param {Object} inputProperties
  */
 export function _createModel(store, modelName, inputProperties) {
     return store.createRecord(modelName, inputProperties)
@@ -181,9 +171,9 @@ export function _createModel(store, modelName, inputProperties) {
 
 /**
  * 指定Model根据ID查询缓存
- * @param {Ember Object/DS.Store} store 
- * @param {String*} modelName 
- * @param {String} id 
+ * @param {Ember Object/DS.Store} store
+ * @param {String*} modelName
+ * @param {String} id
  */
 export function _queryModelByID(store, modelName, id) {
     return store.peekRecord(modelName, id)
@@ -191,8 +181,8 @@ export function _queryModelByID(store, modelName, id) {
 
 /**
  * 指定Model查询所有缓存
- * @param {Ember Object/DS.Store} store 
- * @param {String} modelName 
+ * @param {Ember Object/DS.Store} store
+ * @param {String} modelName
  */
 export function _queryModelByAll(store, modelName) {
     return store.peekAll(modelName)
@@ -201,10 +191,10 @@ export function _queryModelByAll(store, modelName) {
 /**
  * 指定Model根据ID修改缓存
  * 未实现
- * @param {Ember Object/DS.Store} store 
- * @param {String} modelName 
- * @param {String} id 
- * @param {Object} inputProperties 
+ * @param {Ember Object/DS.Store} store
+ * @param {String} modelName
+ * @param {String} id
+ * @param {Object} inputProperties
  */
 export function _updataModelByID(store, modelName, id, inputProperties) {
     let record = store.peekRecord(modelName, id);
@@ -215,9 +205,9 @@ export function _updataModelByID(store, modelName, id, inputProperties) {
 
 /**
  * 指定Model根据ID删除缓存
- * @param {Ember Object/DS.Store} store 
- * @param {String} modelName 
- * @param {String} id 
+ * @param {Ember Object/DS.Store} store
+ * @param {String} modelName
+ * @param {String} id
  */
 export function _removeModelByID(store, modelName, id) {
     store.peekRecord(modelName, id).destroyRecord().then(rec => rec.unloadRecord());
@@ -225,8 +215,8 @@ export function _removeModelByID(store, modelName, id) {
 
 /**
  * 指定Model删除所有缓存
- * @param {Ember Object/DS.Store} store 
- * @param {String} modelName 
+ * @param {Ember Object/DS.Store} store
+ * @param {String} modelName
  */
 export function _removeModelByAll(store, modelName) {
     store.unloadAll(modelName)
@@ -237,7 +227,7 @@ export function _removeModelByAll(store, modelName) {
 // });
 
 export function _model2LocalStorge(modelClass) {
-    
+
     let modelIsArray = isArray(modelClass)
     let temp = _object2JsonApi(modelClass)
     if (modelIsArray) {

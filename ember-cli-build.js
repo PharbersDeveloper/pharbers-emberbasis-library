@@ -3,7 +3,7 @@
 const EmberAddon = require('ember-cli/lib/broccoli/ember-addon');
 
 module.exports = function (defaults) {
-    let sourceMap = process.env.EMBER_ENV === 'production' ? 'false' : 'inline';
+    let sourceMap = process.env.EMBER_ENV === 'production' ? 'both' : 'inline';
     console.info(sourceMap)
     let app = new EmberAddon(defaults, {
         // Add options here

@@ -309,7 +309,7 @@ export default DS.Store.extend({
     createModel(modelName, inputProperties) {
         return _createModel(this, modelName, inputProperties);
     },
-    
+
     updataModelByID(modelName, id, inputProperties) {
         return _updataModelByID(this, modelName, id, inputProperties)
     },

@@ -6492,6 +6492,21 @@ performance-now@^2.1.0:
   version "2.1.0"
   resolved "http://registry.npm.taobao.org/performance-now/download/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
 
+pharbers-ember-condition-model@latest:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/pharbers-ember-condition-model/-/pharbers-ember-condition-model-1.0.0.tgz#0ecf99f943fdb97d9a6639e378aa2d640af797e5"
+  integrity sha512-ETtEgubr6bE8f7mUxDTxYyIacJHsd/b/74iSoO1fVEK3gxyjvgKfo4mledgerdtjR2IPsakznSo/lBx28lGfJg==
+  dependencies:
+    ember-cli-babel "^6.6.0"
+
+pharbers-ember-event-handle@latest:
+  version "1.0.0"
+  resolved "https://registry.npmjs.org/pharbers-ember-event-handle/-/pharbers-ember-event-handle-1.0.0.tgz#2c0670335b0a8b67f92f6ee5e27d8ace1d430df9"
+  integrity sha512-6C7KYbxEqvbDnm9sEtc79IQd9lWZbZLXDO/NLFB0tHic+KvlzdbDeaNasKFZCDsGu97xDNHzn7nByZvTiRq9hw==
+  dependencies:
+    ember-cli-babel "^6.6.0"
+    ember-cli-htmlbars "^2.0.1"
+
 pify@^2.0.0:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/pify/-/pify-2.3.0.tgz#ed141a6ac043a849ea588498e7dca8b15330e90c"

@@ -7,6 +7,9 @@
 3. 对store进行封装，提供符合Pharbers的设计与Function
 4. 函数注册，统一管理调用
 5. Component的 Chain of Responsibility Pattern(责任链模式)
+6. Cookie封装
+7. Model => LocalStorage存储(JSONAPI形式)
+8. blueprint提供
 
 ## Installation
 

@@ -6,27 +6,26 @@ import { get } from '@ember/object';
 import { isEnabled } from '@ember/canary-features'
 import { A } from '@ember/array';
 
-const typeForRelationshipMeta = function(meta) {
-	let modelName;
-
-	modelName = meta.type || meta.key;
-	if (meta.kind === 'hasMany') {
-		modelName = dasherize(modelName);
-	}
-	return modelName;
-}
+// const typeForRelationshipMeta = function(meta) {
+// 	let modelName;
+// 	modelName = meta.type || meta.key;
+// 	if (meta.kind === 'hasMany') {
+// 		modelName = dasherize(modelName);
+//     }
+// 	return modelName;
+// }
 
 export default DS.JSONAPISerializer.extend({
 	primaryKey: 'id',
 	keyForAttribute(key) {
-		return key
+		return key;
 	},
 	keyForRelationship(key) {
-		return key
+		return key;
 	},
 	payloadKeyFromModelName(modelName) {
-		return modelName
-	},
+		return modelName;
+    },
 	modelNameFromPayloadKey(modelName) {
 		return dasherize(modelName);
 	},
@@ -37,20 +36,18 @@ export default DS.JSONAPISerializer.extend({
 	 */
 	extractRelationships(modelClass, resourceHash) {
 		let relationships = {};
-		try {
-			modelClass.relatedTypes = typeForRelationshipMeta(resourceHash)
-		} catch (e) {
-			modelClass.relatedTypes.pushObject(typeForRelationshipMeta(resourceHash));
-		}
+		// try {
+		// 	modelClass.relatedTypes = typeForRelationshipMeta(resourceHash)
+		// } catch (e) {
+		// 	modelClass.relatedTypes.pushObject(typeForRelationshipMeta(resourceHash));
+		// }
 		if (resourceHash.relationships) {
 			modelClass.eachRelationship((key, relationshipMeta) => {
-				relationshipMeta.type = typeForRelationshipMeta(resourceHash)
+				relationshipMeta.type = dasherize(relationshipMeta.type)//typeForRelationshipMeta(resourceHash)
 				let relationshipKey = this.keyForRelationship(key, relationshipMeta.kind, 'deserialize');
 				if (resourceHash.relationships[relationshipKey] !== undefined) {
-
 					let relationshipHash = resourceHash.relationships[relationshipKey];
 					relationships[key] = this.extractRelationship(relationshipHash);
-
 				}
 				if (DEBUG) {
 					if (resourceHash.relationships[relationshipKey] === undefined && resourceHash.relationships[key] !== undefined) {
@@ -113,11 +110,12 @@ export default DS.JSONAPISerializer.extend({
 						id: belongsTo.id
 					};
                 }
+
                 if (!isRecursive) {
                     json.relationships[payloadKey] = { data };
                     types.push({id: snapshot.id, type: snapshot.modelName});
                 } else {
-                    let tt = json.included.filter(elem => elem.id === snapshot.id && elem.type === snapshot.modelName);
+                    let tt = json.included.filter(elem => elem.id === snapshot.id && elem.type === this.payloadKeyFromModelName(snapshot.modelName));
                     tt.forEach(elem => {
                         elem.relationships = elem.relationships || {};
                         elem.relationships[payloadKey] = { data }
@@ -191,7 +189,7 @@ export default DS.JSONAPISerializer.extend({
                     json.relationships[payloadKey] = { data };
                     types.push({id: snapshot.id, type: snapshot.modelName});
                 } else {
-                    let tt = json.included.find(elem => elem.id === snapshot.id && elem.type === snapshot.modelName);
+                    let tt = json.included.find(elem => elem.id === snapshot.id && elem.type === this.payloadKeyFromModelName(snapshot.modelName));
                     tt.relationships = tt.relationships || {};
                     tt.relationships[payloadKey] = { data }
                 }
