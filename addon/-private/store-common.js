@@ -1,3 +1,5 @@
+/* eslint-disable no-undefined */
+/* eslint-disable no-underscore-dangle */
 import { get } from '@ember/object';
 // import Ember from 'ember';
 /**
@@ -21,7 +23,7 @@ import { get } from '@ember/object';
 export function _bind(fn, ...args) {
 	// heimdall.increment(__bind);
 
-	return function() {
+	return function () {
 		return fn.apply(undefined, args);
 	};
 }
@@ -29,7 +31,7 @@ export function _bind(fn, ...args) {
 export function _guard(promise, test) {
 	// heimdall.increment(__guard);
 	try {
-		let guarded = promise['finally'](function() {
+		let guarded = promise['finally'](function () {
 			if (!test()) {
 				guarded._subscribers.length = 0;
 			}
@@ -51,5 +53,5 @@ export function _guard(promise, test) {
 
 export function _objectIsAlive(object) {
 	// heimdall.increment(__objectIsAlive);
-	return !(get(object, "isDestroyed") || get(object, "isDestroying"));
+	return !(get(object, 'isDestroyed') || get(object, 'isDestroying'));
 }

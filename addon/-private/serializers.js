@@ -4,15 +4,16 @@
 export function serializerForAdapter(store, adapter, modelName) {
 	let serializer = adapter.serializer;
 
-	if (serializer === undefined) {
+	if (typeof serializer === 'undefined') {
 		serializer = store.serializerFor(modelName);
 	}
 
-	if (serializer === null || serializer === undefined) {
+	if (serializer === null || typeof serializer === 'undefined') {
 		serializer = {
-			extract(store, type, payload) { return payload; }
+			extract(estores, type, payload) {
+				return payload;
+			}
 		};
+		return serializer;
 	}
-
-	return serializer;
 }

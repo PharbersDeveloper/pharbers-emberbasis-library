@@ -1,11 +1,8 @@
-import {
-    _bind,
-    _guard,
-    _objectIsAlive
-} from "./store-common";
+/* eslint-disable no-underscore-dangle */
+import { _bind, _guard, _objectIsAlive } from './store-common';
 
-import { normalizeResponseHelper } from "./serializer-response";
-import { serializerForAdapter } from "./serializers";
+import { normalizeResponseHelper } from './serializer-response';
+import { serializerForAdapter } from './serializers';
 import { isArray } from '@ember/array';
 
 
@@ -25,22 +22,23 @@ import { isArray } from '@ember/array';
  * @returns {Promise}
  */
 export function _queryObject(url, adapter, store, modelName, query) {
+	let modelClass = null, promise = null, label = null, serializer = null, payload = null;
 
-    let modelClass = store.modelFor(modelName);
-    let promise = adapter.queryObject(url, store, modelClass, query);
+	modelClass = store.modelFor(modelName);
+	promise = adapter.queryObject(url, store, modelClass, query);
 
-    let label = `DS: Handle Adapter#queryObject of ${modelName}`;
+	label = `DS: Handle Adapter#queryObject of ${modelName}`;
 
-    promise = Promise.resolve(promise, label);
-    promise = _guard(promise, _bind(_objectIsAlive, store));
+	promise = Promise.resolve(promise, label);
+	promise = _guard(promise, _bind(_objectIsAlive, store));
 
-    return promise.then((adapterPayload) => {
+	return promise.then((adapterPayload) => {
 
-        let serializer = serializerForAdapter(store, adapter, modelName);
-        let payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'queryObject');
+		serializer = serializerForAdapter(store, adapter, modelName);
+		payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'queryObject');
 
-        return store._push(payload);
-    }, null, `DS: Extract payload of queryObject ${modelName}`)
+		return store._push(payload);
+	}, null, `DS: Extract payload of queryObject ${modelName}`);
 }
 
 /**
@@ -55,34 +53,42 @@ export function _queryObject(url, adapter, store, modelName, query) {
  * @returns {Promise}
  */
 export function _queryMultipleObject(url, adapter, store, modelName, query, recordArray) {
-    let modelClass = store.modelFor(modelName);
-    let promise;
-    if (adapter.queryMultipleObject.length > 4 ) {
-        recordArray = recordArray || store.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query);
-        promise = adapter.queryMultipleObject(url, store, modelClass, query, recordArray);
-    } else {
-        promise = adapter.queryMultipleObject(url, store, modelClass, query);
-    }
+	let modelClass = null,
+		promise = null,
+		label = '',
+		serializer = null,
+		payload = null,
+		internalModels = null,
+		recordArrays = null;
 
-    let label = `DS: Handle Adapter#queryMultipleObject of ${modelClass}`;
+	modelClass = store.modelFor(modelName);
 
-    promise = Promise.resolve(promise, label);
-    promise = _guard(promise, _bind(_objectIsAlive, store));
+	if (adapter.queryMultipleObject.length > 4) {
+		recordArrays = recordArray || store.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query);
+		promise = adapter.queryMultipleObject(url, store, modelClass, query, recordArrays);
+	} else {
+		promise = adapter.queryMultipleObject(url, store, modelClass, query);
+	}
 
-    return promise.then(adapterPayload => {
-        let serializer = serializerForAdapter(store, adapter, modelName);
-        let payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'queryMultipleObject');
+	label = `DS: Handle Adapter#queryMultipleObject of ${modelClass}`;
 
-        let internalModels = store._push(payload);
+	promise = Promise.resolve(promise, label);
+	promise = _guard(promise, _bind(_objectIsAlive, store));
 
-        if (recordArray) {
-            recordArray._setInternalModels(internalModels, payload);
-        } else {
-            recordArray = store.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query, internalModels, payload);
-        }
+	return promise.then(adapterPayload => {
+		serializer = serializerForAdapter(store, adapter, modelName);
+		payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'queryMultipleObject');
 
-        return recordArray;
-    }, null, `DS: Extract payload of query ${modelName}`);
+		internalModels = store._push(payload);
+
+		if (recordArray) {
+			recordArray._setInternalModels(internalModels, payload);
+		} else {
+			recordArrays = store.recordArrayManager.createAdapterPopulatedRecordArray(modelName, query, internalModels, payload);
+		}
+
+		return recordArrays;
+	}, null, `DS: Extract payload of query ${modelName}`);
 }
 
 /**
@@ -97,21 +103,21 @@ export function _queryMultipleObject(url, adapter, store, modelName, query, reco
  */
 export function _transaction(url, adapter, store, modelName, query) {
 
-    let modelClass = store.modelFor(modelName);
-    let promise = adapter.transaction(url, store, modelClass, query);
+	let modelClass = null, promise = null, label = '', serializer = null, payload = null;
 
-    let label = `DS: Handle Adapter#transaction of ${modelName}`;
+	modelClass = store.modelFor(modelName);
+	promise = adapter.transaction(url, store, modelClass, query);
 
-    promise = Promise.resolve(promise, label);
-    promise = _guard(promise, _bind(_objectIsAlive, store));
+	label = `DS: Handle Adapter#transaction of ${modelName}`;
 
-    return promise.then((adapterPayload) => {
+	promise = Promise.resolve(promise, label);
+	promise = _guard(promise, _bind(_objectIsAlive, store));
 
-        let serializer = serializerForAdapter(store, adapter, modelName);
-        let payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'transaction');
-
-        return store._push(payload);
-    }, null, `DS: Extract payload of transaction ${modelName}`)
+	return promise.then((adapterPayload) => {
+		serializer = serializerForAdapter(store, adapter, modelName);
+		payload = normalizeResponseHelper(serializer, store, modelClass, adapterPayload, null, 'transaction');
+		return store._push(payload);
+	}, null, `DS: Extract payload of transaction ${modelName}`);
 }
 
 /**
@@ -120,43 +126,48 @@ export function _transaction(url, adapter, store, modelName, query) {
  * @returns {Object}
  */
 export function _object2JsonApi(model) {
-    let data = {};
-    let modelIsArray = isArray(model)
-    if (modelIsArray) {
-        let dataArray = [];
-        let includedArray = [];
-        model.forEach(record => {
-            let serializeData = record.serialize({ includeId: true });
-            dataArray.push({
-                id: serializeData.id,
-                type: serializeData.type,
-                attributes: serializeData.attributes,
-                relationships: serializeData.relationships
-            });
-            serializeData.included.forEach(record => {
-                let temp = includedArray.find(elem => elem.id === record.id && elem.type === record.type)
-                if (!temp) {
-                    includedArray.push(...serializeData.included)
-                }
-            })
-        });
-        data = {
-            data: dataArray,
-            included: includedArray
-        }
-    } else {
-        let serializeData = model.serialize({ includeId: true });
-        data = {
-            data: {
-                id: serializeData.id,
-                type: serializeData.type,
-                attributes: serializeData.attributes,
-                relationships: serializeData.relationships
-            },
-            included: serializeData.included
-        }
-    }
-    return data;
+	let data = {}, modelIsArray = null;
+
+	modelIsArray = isArray(model);
+
+	if (modelIsArray) {
+		let dataArray = [], includedArray = [];
+
+		model.forEach(record => {
+			let serializeData = record.serialize({ includeId: true });
+
+			dataArray.push({
+				id: serializeData.id,
+				type: serializeData.type,
+				attributes: serializeData.attributes,
+				relationships: serializeData.relationships
+			});
+			serializeData.included.forEach(includedRecord => {
+				let temp = includedArray.find(elem => elem.id === includedRecord.id && elem.type === includedRecord.type);
+
+				if (!temp) {
+					includedArray.push(...serializeData.included);
+				}
+			});
+		});
+		data = {
+			data: dataArray,
+			included: includedArray
+		};
+	} else {
+		let serializeData = model.serialize({ includeId: true });
+
+		data = {
+			data: {
+				id: serializeData.id,
+				type: serializeData.type,
+				attributes: serializeData.attributes,
+				relationships: serializeData.relationships
+			},
+			included: serializeData.included
+		};
+	}
+	return data;
 }
 
 /**
@@ -166,7 +177,7 @@ export function _object2JsonApi(model) {
  * @param {Object} inputProperties
  */
 export function _createModel(store, modelName, inputProperties) {
-    return store.createRecord(modelName, inputProperties)
+	return store.createRecord(modelName, inputProperties);
 }
 
 /**
@@ -176,7 +187,7 @@ export function _createModel(store, modelName, inputProperties) {
  * @param {String} id
  */
 export function _queryModelByID(store, modelName, id) {
-    return store.peekRecord(modelName, id)
+	return store.peekRecord(modelName, id);
 }
 
 /**
@@ -185,7 +196,7 @@ export function _queryModelByID(store, modelName, id) {
  * @param {String} modelName
  */
 export function _queryModelByAll(store, modelName) {
-    return store.peekAll(modelName)
+	return store.peekAll(modelName);
 }
 
 /**
@@ -197,10 +208,15 @@ export function _queryModelByAll(store, modelName) {
  * @param {Object} inputProperties
  */
 export function _updataModelByID(store, modelName, id, inputProperties) {
-    let record = store.peekRecord(modelName, id);
-    let keys = Object.keys(inputProperties);
-    keys.forEach(key => { record.set(key, inputProperties[key]) });
-    return record;
+	let record = null, keys = [];
+
+	record = store.peekRecord(modelName, id);
+	keys = Object.keys(inputProperties);
+
+	keys.forEach(key => {
+		record.set(key, inputProperties[key]);
+	});
+	return record;
 }
 
 /**
@@ -210,7 +226,7 @@ export function _updataModelByID(store, modelName, id, inputProperties) {
  * @param {String} id
  */
 export function _removeModelByID(store, modelName, id) {
-    store.peekRecord(modelName, id).destroyRecord().then(rec => rec.unloadRecord());
+	store.peekRecord(modelName, id).destroyRecord().then(rec => rec.unloadRecord());
 }
 
 /**
@@ -219,7 +235,7 @@ export function _removeModelByID(store, modelName, id) {
  * @param {String} modelName
  */
 export function _removeModelByAll(store, modelName) {
-    store.unloadAll(modelName)
+	store.unloadAll(modelName);
 }
 
 // const observerModelToLocalStorge = EmberObject.create({
@@ -227,31 +243,33 @@ export function _removeModelByAll(store, modelName) {
 // });
 
 export function _model2LocalStorge(modelClass) {
+	let modelIsArray = null, temp = null;
 
-    let modelIsArray = isArray(modelClass)
-    let temp = _object2JsonApi(modelClass)
-    if (modelIsArray) {
-        // 监测涉及到深复制，先暂停
-        // observerModelToLocalStorge.set(modelClass.get('firstObject')._internalModel.modelName, modelClass);
-        // let {attributes, relationships} = modelClass.get('firstObject').serialize()
-        // Object.keys(attributes).forEach(key => {
+	modelIsArray = isArray(modelClass);
+	temp = _object2JsonApi(modelClass);
 
-        // })
-        // Object.keys(relationships).forEach(key => {
+	if (modelIsArray) {
+		// 监测涉及到深复制，先暂停
+		// observerModelToLocalStorge.set(modelClass.get('firstObject')._internalModel.modelName, modelClass);
+		// let {attributes, relationships} = modelClass.get('firstObject').serialize()
+		// Object.keys(attributes).forEach(key => {
 
-        // })
-        // window.console.info(attributes)
-        // window.console.info(relationships)
-        // observerModelToLocalStorge.reopen({
-        //     change: observer('mm.@each.token', function() {
-        //         window.console.info(123)
-        //     })
-        // })
-        localStorage.setItem(modelClass.get('firstObject')._internalModel.modelName, JSON.stringify(temp));
-    } else {
-        // observerModelToLocalStorge.set(modelClass._internalModel.modelName, modelClass);
-        localStorage.setItem(modelClass._internalModel.modelName, JSON.stringify(temp));
-    }
+		// })
+		// Object.keys(relationships).forEach(key => {
+
+		// })
+		// window.console.info(attributes)
+		// window.console.info(relationships)
+		// observerModelToLocalStorge.reopen({
+		//     change: observer('mm.@each.token', function() {
+		//         window.console.info(123)
+		//     })
+		// })
+		localStorage.setItem(modelClass.get('firstObject')._internalModel.modelName, JSON.stringify(temp));
+	} else {
+		// observerModelToLocalStorge.set(modelClass._internalModel.modelName, modelClass);
+		localStorage.setItem(modelClass._internalModel.modelName, JSON.stringify(temp));
+	}
 }
 
 // export function _localStorage2Model(key) {

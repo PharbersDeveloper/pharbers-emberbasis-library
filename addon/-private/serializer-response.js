@@ -5,5 +5,6 @@
  */
 export function normalizeResponseHelper(serializer, store, modelClass, payload, id, requestType) {
 	let normalizedResponse = serializer.normalizeResponse(store, modelClass, payload, id, requestType);
+
 	return normalizedResponse;
 }
