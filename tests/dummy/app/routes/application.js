@@ -48,19 +48,31 @@ export default Route.extend({
                 id: '1',
                 skip: 0,
                 take: 1000
-            })
+			}),
+			eqcond: A([
+				this.get('phstore').createModel('eqcond', {
+					id: '1',
+					key: 'region_id',
+					val: 'a',
+				}),
+				this.get('phstore').createModel('eqcond', {
+					id: '2',
+					key: 'course_id',
+					val: 12,
+				})]
+			)
         });
-        let eqValues = [
-            { id: 1, type: 'eqcond', key: 'region_id', val: 'a' },
-            { id: 2, type: 'eqcond', key: 'course_id', val: 12 },
-        ]
-        eqValues.forEach((elem) => {
-            req.get(elem.type).pushObject(this.get('phstore').createModel(elem.type, {
-                id: elem.id,
-                key: elem.key,
-                val: elem.val,
-            }))
-        });
+        // let eqValues = [
+        //     { id: 1, type: 'eqcond', key: 'region_id', val: 'a' },
+        //     { id: 2, type: 'eqcond', key: 'course_id', val: 12 },
+        // ]
+        // eqValues.forEach((elem) => {
+        //     req.get(elem.type).pushObject(this.get('phstore').createModel(elem.type, {
+        //         id: elem.id,
+        //         key: elem.key,
+        //         val: elem.val,
+        //     }))
+        // });
         let conditions = this.get('phstore').object2JsonApi(req);
         this.get('logger').log(conditions)
 
