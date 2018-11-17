@@ -1,3 +1,4 @@
+/* eslint-disable one-var */
 import ObjectProxy from '@ember/object/proxy';
 import PromiseProxyMixin from '@ember/object/promise-proxy-mixin';
 import ArrayProxy from '@ember/array/proxy';
