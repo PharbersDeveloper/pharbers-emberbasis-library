@@ -3,10 +3,10 @@ import Route from '@ember/routing/route';
 /*
     // 查询单个
     this.get('pmController').get('Store').queryObject('url', 'modelName', 'condition');
-    
+
     // 查询多个
     this.get('pmController').get('Store').queryMultipleObject('url', 'modelName', 'condition');
-    
+
     // 事务查询（增、删、改）
     this.get('pmController').get('Store').transaction('url', 'modelName', 'condition');
 
@@ -47,14 +47,14 @@ import Route from '@ember/routing/route';
     this.get('pmController').get('BusinessLogic').getFuncInstance('FuncName', ...args)
 */
 export default Route.extend({
-    setupController(controller, model) {
-        this._super(controller, model);
-        // this.controllerFor('application')
-    },
-    model() {
-        
-    },
-    actions: {
-    
-    }
+	setupController(controller, model) {
+		this._super(controller, model);
+		// this.controllerFor('application')
+	},
+	model() {
+
+	},
+	actions: {
+
+	}
 });

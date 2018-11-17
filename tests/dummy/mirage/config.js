@@ -39,6 +39,76 @@ export default function () {
                 }
             }]
         }
+	});
+
+	this.post('/api/v1/login/1', (/*schema, request*/) => {
+        // window.console.warn(request.requestBody);
+        return {
+            "data": [{
+                "type": "auth",
+                "id": "5b7e454a8fb8076c3c3304l0",
+                "attributes": {
+                    "token": "Test 01"
+                },
+                "relationships": {
+                    "mult_data": {
+                        "data": [{
+                            "type": "multdata",
+                            "id": "001",
+                        }]
+                    }
+                }
+            }, {
+                "type": "auth",
+                "id": "5b7e454a8fb8076c3c3304l1",
+                "attributes": {
+                    "token": "Test 020000000"
+                },
+                "relationships": {
+                    "mult_data": {
+                        "data": [{
+                            "type": "multdata", //multdatum
+                            "id": "001",
+                        }]
+                    }
+                }
+            }],
+            "included": [{
+                "type": "multdata",
+                "id": "001",
+                "attributes": {
+                    "name": "alex0000"
+                }
+            }]
+        }
+	});
+
+	this.post('/api/v1/login/2', (/*schema, request*/) => {
+        // window.console.warn(request.requestBody);
+        return {
+            "data": {
+                "type": "auth",
+                "id": "5b7e454a8fb8076c3c3304l0",
+                "attributes": {
+                    "token": "Test 01"
+                },
+                "relationships": {
+                    "mult_data": {
+                        "data": [{
+                            "type": "multdata",
+                            "id": "001",
+                        }]
+                    }
+                }
+            },
+            "included": [{
+                "type": "multdata",
+                "id": "001",
+                "attributes": {
+                    "name": "alex0000"
+                }
+            }]
+        }
     });
 
     this.post('/api/v1/save/0', (/*schema, request*/) => {

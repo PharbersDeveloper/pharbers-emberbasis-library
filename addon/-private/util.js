@@ -1,6 +1,17 @@
+/* eslint-disable no-underscore-dangle */
 import EmberObject from '@ember/object';
+// import { inject as service } from '@ember/service';
 
 export default EmberObject.extend({
+	// store: service(),
+	// /**
+	//  * 将model变为jsonapi
+	//  * @param {*} model
+	//  */
+	// object2JsonApi(model) {
+	// 	return this.get('store').__object2JsonApi(model);
+	// },
+
 	/**
      * @param {*} objectArray 数组
      * @param {*} property 属性

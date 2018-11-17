@@ -2,21 +2,22 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable new-cap */
 import DS from 'ember-data';
-import { dasherize } from '@ember/string';
+// import { dasherize } from '@ember/string';
 import { assert, deprecate } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
 import { get } from '@ember/object';
 import { isEnabled } from '@ember/canary-features';
 import { A } from '@ember/array';
 
-// const typeForRelationshipMeta = function(meta) {
-// 	let modelName;
-// 	modelName = meta.type || meta.key;
-// 	if (meta.kind === 'hasMany') {
-// 		modelName = dasherize(modelName);
-//     }
-// 	return modelName;
-// }
+const typeForRelationshipMeta = function (relationshipMeta, relationships) {
+	let modelName = '';
+
+	modelName = relationshipMeta.type || relationshipMeta.key;
+	if (relationshipMeta.kind === 'hasMany') {
+		modelName = relationships[relationshipMeta.key].data[0].type;
+	}
+	return modelName;
+};
 
 export default DS.JSONAPISerializer.extend({
 	primaryKey: 'id',
@@ -30,7 +31,7 @@ export default DS.JSONAPISerializer.extend({
 		return modelName;
 	},
 	modelNameFromPayloadKey(modelName) {
-		return dasherize(modelName);
+		return modelName;
 	},
 	/**
 	 * overwrite extractRelationships并做了hacker的步骤，改变EmberData对`type`名字约束，为什么这样做，是因为Ember本身没有暴露这样的接口，后续你们掌握Ember后，可以帮我找找
@@ -47,7 +48,8 @@ export default DS.JSONAPISerializer.extend({
 		// }
 		if (resourceHash.relationships) {
 			modelClass.eachRelationship((key, relationshipMeta) => {
-				relationshipMeta.type = dasherize(relationshipMeta.type);//typeForRelationshipMeta(resourceHash)
+				relationshipMeta.type = typeForRelationshipMeta(relationshipMeta, resourceHash.relationships);
+				// dasherize(relationshipMeta.type);//typeForRelationshipMeta(resourceHash)
 				let relationshipKey = this.keyForRelationship(key, relationshipMeta.kind, 'deserialize');
 
 				if (typeof resourceHash.relationships[relationshipKey] !== 'undefined') {
@@ -87,7 +89,7 @@ export default DS.JSONAPISerializer.extend({
 					json.relationships = json.relationships || {};
 					json.included = json.included || A();
 				}
-				let payloadType = null,payloadKey = this._getMappedKey(key, snapshot.type), data = null;
+				let payloadType = null, payloadKey = this._getMappedKey(key, snapshot.type), data = null;
 
 				if (payloadKey === key) {
 					payloadKey = this.keyForRelationship(key, 'belongsTo', 'serialize');

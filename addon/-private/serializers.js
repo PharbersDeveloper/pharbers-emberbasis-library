@@ -14,6 +14,6 @@ export function serializerForAdapter(store, adapter, modelName) {
 				return payload;
 			}
 		};
-		return serializer;
 	}
+	return serializer;
 }

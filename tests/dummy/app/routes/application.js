@@ -4,11 +4,15 @@ import { A } from '@ember/array';
 import { inject } from '@ember/service';
 
 export default Route.extend({
-    pmc: inject(),
+	// pmc: inject(),
+	phstore: inject(),
     actions: {
         next(data) {
             this.get('logger').log(data)
-        },
+		},
+		reload() {
+			this.refresh()
+		}
         // error(error, transition) {
         //     this.get('logger').log(error)
         //     // return this._super(...arguments);
@@ -16,21 +20,28 @@ export default Route.extend({
         //     // //   this.transitionTo('under-maintenance');
         //     //   return;
         //     // }
-      
+
         //     // ...other error handling logic
         //   }
     },
     model() {
+		// this.get('logger').log(this.get('phstore'))
 
-        let auth = this.get('pmController').get('Store').createModel('bm-atuh', {
+
+        let auth = this.get('phstore').createModel('bm-atuh', {
+			id: '001',
             name: "Alex",
-            person: this.get('pmController').get('Store').createModel('bm-person', {
+            person: this.get('phstore').createModel('bm-person', {
+				id: '002',
                 name: '0000'
             })
         })
 
-        let json = this.get('pmController').get('Store').object2JsonApi(auth, false);
-        this.get('logger').log(json)
+        let json = this.get('phstore').object2JsonApi(auth);
+		this.get('logger').log(json)
+
+		// return this.get('phstore').queryMultipleObject('/api/v1/login/0', 'auth', {});
+		return this.get('phstore').queryObject('/api/v1/login/2', 'auth', {});
 
         // ["北京", "上海", "广东"].forEach((name, index) => {
         //     this.get('pmController').get('Store').createModel('provinces', {
@@ -97,7 +108,7 @@ export default Route.extend({
 
         // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(p_01, false))
 
-        
+
 
         // let post = this.get('pmController').get('Store').createModel('post', {
         //     id: '1',
@@ -123,7 +134,7 @@ export default Route.extend({
         // this.get('logger').log(this.get('pmController').get('Store').object2JsonApi(post, false))
 
         // let req = this.get('pmController').get('Store').createModel('request', {
-        //     id: '1', 
+        //     id: '1',
         //     res: 'bind_course_region_rep',
         //     fmcond: this.get('pmController').get('Store').createModel('fmcond', {
         //         id: '1',
@@ -146,7 +157,7 @@ export default Route.extend({
         // this.get('logger').log(conditions)
 
         // this.get('pmController').get('Store').queryMultipleObject('/api/v1/login/0', 'auth', {}).then(data =>  this.get('logger').log(data.get('firstObject').get('token')))
-        
+
         // return this.get('pmController').get('Store').transaction('/api/v1/save/0', 'auth', {})
         // .then(() => { })
         // .catch(data => {
@@ -167,6 +178,6 @@ export default Route.extend({
         //     });
 
         // }, 1000)
-    },
- 
+    }
+
 });

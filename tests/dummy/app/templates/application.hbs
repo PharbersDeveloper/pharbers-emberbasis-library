@@ -1,5 +1,5 @@
 {{outlet}}
-{{#parent-c next=(action 'next') next2=(action 'next2') current=(action 'current') as |c| }}
+{{!-- {{#parent-c next=(action 'next') next2=(action 'next2') current=(action 'current') as |c| }}
     {{#c.child }}
         {{show-c}}
     {{/c.child}}
@@ -10,4 +10,18 @@
   <div class="error">
     {{error.code}}
   </div>
+{{/each}} --}}
+
+{{#each model as |item|}}
+	{{input value=item.token}}
+	{{#each item.mult_data as |item2|}}
+		{{input value=item2.name}}
+	{{/each}}
 {{/each}}
+
+{{input value=model.token}}
+{{#each model.mult_data as |item2|}}
+	{{input value=item2.name}}
+{{/each}}
+
+<button {{action "reload"}}>reload</button>

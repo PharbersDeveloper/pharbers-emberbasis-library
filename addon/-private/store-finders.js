@@ -1,10 +1,10 @@
+/* eslint-disable one-var */
 /* eslint-disable no-underscore-dangle */
 import { _bind, _guard, _objectIsAlive } from './store-common';
 
 import { normalizeResponseHelper } from './serializer-response';
 import { serializerForAdapter } from './serializers';
 import { isArray } from '@ember/array';
-
 
 /**
  * 只做了2件事 监测绑定store与adapter转向代理方法的封装
@@ -226,7 +226,7 @@ export function _updataModelByID(store, modelName, id, inputProperties) {
  * @param {String} id
  */
 export function _removeModelByID(store, modelName, id) {
-	store.peekRecord(modelName, id).destroyRecord().then(rec => rec.unloadRecord());
+	store.peekRecord(modelName, id).unloadRecord();//destroyRecord().then(rec => rec.unloadRecord());
 }
 
 /**

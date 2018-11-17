@@ -34,7 +34,7 @@ export default DS.Store.extend({
 		window.console.log('The Custom DS.Store Init()');
 	},
 
-	queryObject(url, modelName, jsonObject) {
+	__queryObject(url, modelName, jsonObject) {
 		let normalizedModelName = normalizeModelName(modelName), adapter = this.adapterFor(normalizedModelName);
 
 		assert(`you must implement 'queryObject' in your ${modelName} Adapter`, typeof adapter.queryObject === 'function');
@@ -52,7 +52,7 @@ export default DS.Store.extend({
 				}));
 	},
 
-	queryMultipleObject(url, modelName, jsonObject) {
+	__queryMultipleObject(url, modelName, jsonObject) {
 		assert(`You need to pass a model name: ${modelName} to the store's queryMultipleObject method`, isPresent(modelName));
 		assert(`You need to pass a queryMultipleObject hash to the store's queryMultipleObject method`, jsonObject);
 		assert(`Passing classes to store methods has been removed. Please pass a dasherized string instead of ${modelName}`, typeof modelName === 'string');
@@ -69,7 +69,7 @@ export default DS.Store.extend({
 				undefined));
 	},
 
-	transaction(url, modelName, jsonObject) {
+	__transaction(url, modelName, jsonObject) {
 		let normalizedModelName = normalizeModelName(modelName), adapter = this.adapterFor(normalizedModelName);
 
 		assert(`you must implement 'transaction' in your ${modelName} Adapter`, typeof adapter.transaction === 'function');
@@ -87,220 +87,45 @@ export default DS.Store.extend({
 				}));
 	},
 
+	/**
+	 * 删除model包括关联关系
+	 * @param {*} store
+	 * @param {*} recordData
+	 */
+	__cleanModel(store, recordData) {
+		const MODELID = recordData.id, TYPE = recordData.type, RELATIONSHIPS = recordData.relationships || {};
 
-	// object2JsonApi(modelName, modelObj, isClean = true) {
+		store.peekRecord(TYPE, MODELID).unloadRecord();//destroyRecord().then(rec => rec.unloadRecord());
+		Object.keys(RELATIONSHIPS).forEach(elem => {
+			let temp = RELATIONSHIPS[elem].data;
 
-	// 	function relationshipIsNull(o) {
-	// 		let _relationships = o._internalModel.__relationships;
-	// 		if (_relationships === null ) {
-	// 			return { status: false, value: null, keys: []}
-	// 		}
-	// 		let relationshipsObject = _relationships.initializedRelationships;
-	// 		if (Object.keys(relationshipsObject).length === 0) {
-	// 			return { status: false, value: null, keys: []}
-	// 		} else {
-	// 			return { status: true, value: relationshipsObject, keys: Object.keys(relationshipsObject)}
-	// 		}
-	// 	}
-	// 	function relationshipDataIsNull(value) {
-	// 		return value === null || Object.keys(value).length === 0  ? false : true
-	// 	}
-	// 	function belongsToType(value) {
-	// 		return value.relationshipMeta.kind === 'belongsTo'
-	// 	}
-	// 	function hasManyType(value) {
-	// 		return value.relationshipMeta.kind === 'hasMany'
-	// 	}
-	// 	function deleteNullRelationship() {
-	// 		if (json.data.relationships === undefined || Object.keys(json.data.relationships).length === 0 ) {
-	// 			delete json.data.relationships
-	// 		} if (json.data.relationships === undefined || json.included.length === 0 ){
-	// 			delete json.included
-	// 		}
-	// 	}
-	// 	function cleanModel(model, name) {
-	// 		let reVal = model.store.peekAll(name)
-	// 		reVal.forEach(elem => {
-	// 			elem.destroyRecord().then( rec => rec.unloadRecord());
-	// 		})
-	// 	}
-
-	// 	let number = 0;
-	// 	let json = modelObj.serialize();
-	// 	json.data.id = modelObj.get('id') || '-1';
-
-	// 	let rsps = relationshipIsNull(modelObj)
-
-	// 	if (rsps.status) {
-	// 		json.data.relationships = {};
-	// 		json.included = [];
-	// 		let rdata = null;
-	// 		rsps.keys.forEach((elem) => {
-	// 			if (belongsToType(rsps.value[elem]) && relationshipDataIsNull(modelObj.get(elem))) {
-	// 				let attributes = modelObj.get(elem).serialize().data.attributes
-	// 				let type = modelObj.get(elem).serialize().data.type
-	// 				rdata = json.data.relationships[elem] = {};
-	// 				rdata.data = {
-	// 					id: modelObj.get(elem).get('id') || number + '',
-	// 					type
-	// 				};
-	// 				json.included.push({
-	// 					id: modelObj.get(elem).get('id') || number + '',
-	// 					type,
-	// 					attributes
-	// 				})
-	// 				if(isClean) {cleanModel(modelObj.get(elem), elem)}
-
-	// 			} else if (hasManyType(rsps.value[elem])) {
-	// 				if(relationshipDataIsNull(rsps.value[elem])) {
-	// 					modelObj.get(elem).forEach((ele, index) => {
-	// 						if (index === 0 ) {
-	// 							rdata = json.data.relationships[elem] = {};
-	// 							rdata.data = [];
-	// 						}
-	// 						let attributes = ele.serialize().data.attributes
-	// 						let type = ele.serialize().data.type
-	// 						rdata.data.push({
-	// 							id: ele.get('id') || index + '',
-	// 							type
-	// 						})
-	// 						json.included.push({
-	// 							id: ele.get('id') || index + '',
-	// 							type,
-	// 							attributes
-	// 						})
-	// 					})
-	// 				}
-	// 			}
-	// 			if(isClean) {cleanModel(modelObj, elem)}
-	// 			number++
-	// 		})
-	// 	} else {
-	// 		deleteNullRelationship()
-	// 		if(isClean) {cleanModel(modelObj, modelName)}
-	// 		return json;
-	// 	}
-	// 	deleteNullRelationship()
-	// 	if(isClean) {cleanModel(modelObj, modelName)}
-	// 	return json;
-	// },
-
-	// modelDeepParsing(modelName, modelObj) {
-	//     let json = modelObj.serialize();
-	//     json.data.id = modelObj.get('id') || '-1';
-	//     json.included = [];
-	//     let number = 0;
-	//     function relationshipIsNull(o) {
-	// 		let _relationships = o._internalModel.__relationships;
-	// 		if (_relationships === null ) {
-	// 			return { status: false, value: null, keys: []}
-	// 		}
-	// 		let relationshipsObject = _relationships.initializedRelationships;
-	// 		if (Object.keys(relationshipsObject).length === 0) {
-	// 			return { status: false, value: null, keys: []}
-	// 		} else {
-	// 			return { status: true, value: relationshipsObject, keys: Object.keys(relationshipsObject)}
-	// 		}
-	// 	}
-	// 	function relationshipDataIsNull(value) {
-	// 		return value === null || Object.keys(value).length === 0  ? false : true
-	// 	}
-	// 	function belongsToType(value) {
-	// 		return value.relationshipMeta.kind === 'belongsTo'
-	// 	}
-	// 	function hasManyType(value) {
-	// 		return value.relationshipMeta.kind === 'hasMany'
-	// 	}
-	// 	function deleteNullRelationship() {
-	// 		if (json.data.relationships === undefined || Object.keys(json.data.relationships).length === 0 ) {
-	// 			delete json.data.relationships
-	// 		} if (json.data.relationships === undefined || json.included.length === 0 ){
-	// 			delete json.included
-	// 		}
-	// 	}
-
-
-	//     relationshipRecursive(modelObj, modelName)
-
-	//     function relationshipRecursive(model) {
-	//         let rsps = relationshipIsNull(model)
-	//         if (rsps.status){
-	//             rsps.keys.forEach(key => {
-	//                 if (relationshipDataIsNull(model.get(key)) && belongsToType(rsps.value[key])) {
-	//                     relationshipRecursive(model.get(key), key)
-	//                 } else if (relationshipDataIsNull(model.get(key)) && hasManyType(rsps.value[key])) {
-	//                     model.get(key).forEach((recordModel, index) => {
-	//                         let attributes = recordModel.serialize().data.attributes;
-	//                         let type = recordModel.serialize().data.type;
-	//                         let relationships = recordModel.serialize().data.relationships
-	//                         let temp = json.included.filter((elem) => {
-	//                             return elem.id == recordModel.get('id') && elem.type == type
-	//                         })
-	//                         if(!temp.length) {
-	//                             json.included.push({
-	//                                 id: recordModel.get('id') || index + '',
-	//                                 type,
-	//                                 attributes,
-	//                                 relationships
-	//                             })
-	//                         }
-	//                         relationshipRecursive(recordModel, key)
-	//                     })
-	//                 }
-	//             });
-	//         } else {
-	//             let attributes = model.serialize().data.attributes;
-	//             let type = model.serialize().data.type;
-	//             let temp = json.included.filter((elem) => {
-	//                 return elem.id == model.get('id') && elem.type == type
-	//             })
-	//             if(!temp.length) {
-	//                 json.included.push({
-	//                     id: model.get('id') || number + '',
-	//                     type,
-	//                     attributes
-	//                 })
-	//             }
-	//         }
-	//         number++
-	//     }
-	// 	deleteNullRelationship()
-	// 	return json;
-	// },
+			if (Array.isArray(temp)) {
+				temp.forEach(d => {
+					store.peekRecord(d.type, d.id).unloadRecord();//destroyRecord().then(rec => rec.unloadRecord());
+				});
+			} else {
+				store.peekRecord(temp.type, temp.id).unloadRecord();//.destroyRecord().then(rec => rec.unloadRecord());
+			}
+		});
+	},
 
 	/**
      * 通过Ember的CreateRecord创建数据关系，再利用此Function 进行数据的serialize 最后拼装成JSONAPI的形式
      * @param {Ember Model} model
      * @param {Boolean} isClean
      */
-	object2JsonApi(model, isClean = true) {
-		function cleanModel(recordData) {
-			const MODELID = recordData.id, TYPE = recordData.type, RELATIONSHIPS = recordData.relationships || {};
-
-			model.store.peekRecord(TYPE, MODELID).destroyRecord().then(rec => rec.unloadRecord());
-			Object.keys(RELATIONSHIPS).forEach(elem => {
-				let temp = RELATIONSHIPS[elem].data;
-
-				if (Array.isArray(temp)) {
-					temp.forEach(d => {
-						model.store.peekRecord(d.type, d.id).destroyRecord().then(rec => rec.unloadRecord());
-					});
-				} else {
-					model.store.peekRecord(temp.type, temp.id).destroyRecord().then(rec => rec.unloadRecord());
-				}
-			});
-		}
+	__object2JsonApi(model, isClean = true) {
 		let data = _object2JsonApi(model), modelIsArray = isArray(model);
 
 		if (modelIsArray) {
 			model.forEach(reocrd => {
 				if (isClean) {
-					cleanModel(reocrd.serialize({ includeId: true }));
+					this.__cleanModel(model.store, reocrd.serialize({ includeId: true }));
 				}
 			});
 		}
 		if (isClean) {
-			cleanModel(model.serialize({ includeId: true }));
+			this.__cleanModel(model.store, model.serialize({ includeId: true }));
 		}
 		return data;
 	},
@@ -310,11 +135,11 @@ export default DS.Store.extend({
      * @param {String} modelName
      * @param {Object} inputProperties
      */
-	createModel(modelName, inputProperties) {
+	__createModel(modelName, inputProperties) {
 		return _createModel(this, modelName, inputProperties);
 	},
 
-	updataModelByID(modelName, id, inputProperties) {
+	__updataModelByID(modelName, id, inputProperties) {
 		return _updataModelByID(this, modelName, id, inputProperties);
 	},
 	/**
@@ -322,7 +147,7 @@ export default DS.Store.extend({
      * @param {String} modelName
      * @param {String} id
      */
-	queryModelByID(modelName, id) {
+	__queryModelByID(modelName, id) {
 		return _queryModelByID(this, modelName, id);
 	},
 
@@ -330,7 +155,7 @@ export default DS.Store.extend({
      *
      * @param {String} modelName
      */
-	queryModelByAll(modelName) {
+	__queryModelByAll(modelName) {
 		return _queryModelByAll(this, modelName);
 	},
 
@@ -339,7 +164,7 @@ export default DS.Store.extend({
      * @param {String} modelName
      * @param {String} id
      */
-	removeModelByID(modelName, id) {
+	__removeModelByID(modelName, id) {
 		_removeModelByID(this, modelName, id);
 	},
 
@@ -347,7 +172,7 @@ export default DS.Store.extend({
      *
      * @param {String} modelName
      */
-	removeModelByAll(modelName) {
+	__removeModelByAll(modelName) {
 		_removeModelByAll(this, modelName);
 	},
 
@@ -355,7 +180,7 @@ export default DS.Store.extend({
      *
      * @param {Model} modelClass
      */
-	model2LocalStorge(modelClass) {
+	__model2LocalStorge(modelClass) {
 		_model2LocalStorge(modelClass);
 	}
 });
