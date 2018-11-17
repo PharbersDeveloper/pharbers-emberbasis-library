@@ -28,17 +28,41 @@ export default Route.extend({
 		// this.get('logger').log(this.get('phstore'))
 
 
-        let auth = this.get('phstore').createModel('bm-atuh', {
-			id: '001',
-            name: "Alex",
-            person: this.get('phstore').createModel('bm-person', {
-				id: '002',
-                name: '0000'
-            })
-        })
+        // let auth = this.get('phstore').createModel('bm-atuh', {
+		// 	id: '001',
+        //     name: "Alex",
+        //     person: this.get('phstore').createModel('bm-person', {
+		// 		id: '002',
+        //         name: '0000'
+        //     })
+        // })
 
-        let json = this.get('phstore').object2JsonApi(auth);
-		this.get('logger').log(json)
+        // let json = this.get('phstore').object2JsonApi(auth);
+		// this.get('logger').log(json)
+
+
+		let req = this.get('phstore').createModel('request', {
+            id: '1',
+            res: 'bind_course_region_rep',
+            fmcond: this.get('phstore').createModel('fmcond', {
+                id: '1',
+                skip: 0,
+                take: 1000
+            })
+        });
+        let eqValues = [
+            { id: 1, type: 'eqcond', key: 'region_id', val: 'a' },
+            { id: 2, type: 'eqcond', key: 'course_id', val: 12 },
+        ]
+        eqValues.forEach((elem) => {
+            req.get(elem.type).pushObject(this.get('phstore').createModel(elem.type, {
+                id: elem.id,
+                key: elem.key,
+                val: elem.val,
+            }))
+        });
+        let conditions = this.get('phstore').object2JsonApi(req);
+        this.get('logger').log(conditions)
 
 		// return this.get('phstore').queryMultipleObject('/api/v1/login/0', 'auth', {});
 		return this.get('phstore').queryObject('/api/v1/login/2', 'auth', {});
