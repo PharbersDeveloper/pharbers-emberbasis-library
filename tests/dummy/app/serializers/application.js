@@ -1,5 +1,5 @@
 import PharbersSerializer from 'pharbers-emberbasis-library/serializers/phserializer';
-
+import { classify } from '@ember/string';
 
 /**
  * 所有的Serializer都要继承phserializer
@@ -8,5 +8,7 @@ import PharbersSerializer from 'pharbers-emberbasis-library/serializers/phserial
  */
 
 export default PharbersSerializer.extend({
-
+	payloadKeyFromModelName(modelName) {
+		return classify(modelName);
+	},
 });
