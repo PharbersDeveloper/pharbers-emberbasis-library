@@ -8,7 +8,7 @@ import { classify } from '@ember/string';
  */
 
 export default PharbersSerializer.extend({
-	payloadKeyFromModelName(modelName) {
-		return classify(modelName);
-	},
+	// payloadKeyFromModelName(modelName) {
+	// 	return classify(modelName);
+	// },
 });
