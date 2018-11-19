@@ -1,12 +1,13 @@
 import Controller from '@ember/controller';
 // import { Observer } from '@ember/object';
+import { inject as service } from '@ember/service';
 
 export default Controller.extend({
-
+	test: service(),
     init() {
         this._super(...arguments);
         // this.JSRSA()
-        // this.BusinessLogic()
+        this.BusinessLogic()
         // this.get('logger').log(this.get('cookie').write('ad', 'dasdsa'))
         // this.get('cookie').write('aa', 'bb', { path: '/' })
     },
@@ -27,7 +28,7 @@ export default Controller.extend({
     JSRSA() {
         let PublicKey = ``
         let PrivateKey = ``
-        let RSA = this.get('pmController').get('RSA');
+        let RSA = this.get('rsa');
         RSA.setPublicKey(PublicKey)
 
         // const params = {
@@ -50,9 +51,9 @@ export default Controller.extend({
     },
     BusinessLogic() {
         function Func(name, age) {
-            this.get('logger').log(`Say Hi ${name}，I‘am Age ${age}`)
+            this.get('logger').log(`Say Hi ${name}，I‘am Age ${age}`);
         }
-        this.get('pmController').get('BusinessLogic').funcInjection(Func)
-        this.get('pmController').get('BusinessLogic').getFuncInstance('Func', 'Alex', 24)
+		this.get('test').injectFunc(Func);
+        this.get('test').getInjectFuncInstance('Func', 'Alex', 24);
     }
 });

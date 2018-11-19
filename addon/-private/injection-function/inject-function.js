@@ -1,26 +1,24 @@
-/* eslint-disable new-cap */
-import Service from '@ember/service';
+import EmberObject from '@ember/object';
 import { A } from '@ember/array';
 import { assert } from '@ember/debug';
 
-export default Service.extend({
+export default EmberObject.create({
+	// eslint-disable-next-line new-cap
 	listFunc: A(),
-	/**
-     * 商务逻辑注入到Service
-     * @param {Object} func
-     */
+
 	funcInjection(func) {
 		let name = func.name;
 
-		assert(`List of the same key, KeyName => ${name}`, !this.get('listFunc').any(obj => obj.name === name));
+		assert(`List of the same key, KeyName => '${name}'`, !this.get('listFunc').any(obj => obj.name === name));
 		this.get('listFunc').pushObject({ name, reference: func });
 	},
-	getFuncInstance(funcName, ...arg) {
+
+	getFuncInstance(_this, funcName, ...arg) {
 		let reVal = this.get('listFunc').find(obj => obj.name === funcName);
 
 		assert(`Function is not find，Please review => ${funcName}`, reVal);
 		if (reVal) {
-			reVal.reference.call(this, ...arg);
+			reVal.reference.call(_this, ...arg);
 		}
 		return null;
 	}

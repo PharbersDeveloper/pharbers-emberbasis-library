@@ -1,16 +1,40 @@
 /* eslint-disable no-underscore-dangle */
 import EmberObject from '@ember/object';
-// import { inject as service } from '@ember/service';
+import { inject } from '@ember/service';
 
 export default EmberObject.extend({
-	// store: service(),
-	// /**
-	//  * 将model变为jsonapi
-	//  * @param {*} model
-	//  */
-	// object2JsonApi(model) {
-	// 	return this.get('store').__object2JsonApi(model);
-	// },
+	cookies: inject(),
+	/**
+	 * cookie的读取
+	 * @param {String} key
+	 */
+	cookieRead(key) {
+		return this.get('cookies').read(key);
+	},
+
+	/**
+	 * cookie的写入
+	 * @param {String} key
+	 * @param {Object} data
+	 * @param {Object} options
+	 */
+	cookieWrite(key, data, options) {
+		this.get('cookies').write(key, data, options);
+	},
+
+	/**
+	 * cookie的清除
+	 * @param  {...any} arg
+	 */
+	cookieClean(...arg) {
+		let that = this;
+
+		return function (option = {}) {
+			arg.forEach(key => {
+				that.get('cookies').clear(key, option);
+			});
+		};
+	},
 
 	/**
      * @param {*} objectArray 数组

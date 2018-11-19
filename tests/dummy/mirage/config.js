@@ -265,7 +265,7 @@ export default function () {
                 "type": "multdata",
                 "id": "002",
                 "attributes": {
-                    "name": "日你妈"
+                    "name": "哈哈哈哈"
                 }
             }]
         }

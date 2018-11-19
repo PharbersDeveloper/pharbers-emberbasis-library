@@ -113,8 +113,8 @@ export default DS.JSONAPISerializer.extend({
 					}
 
 					data = {
-						type: payloadType,
-						id: belongsTo.id
+						id: belongsTo.id,
+						type: payloadType
 					};
 				}
 
@@ -139,7 +139,8 @@ export default DS.JSONAPISerializer.extend({
 
 				// TODO 需要递归的实现多层级的关系序列化，但是又有效率问题，先暂停
 				belongsTo.eachRelationship((key, relationships) => {
-					let isExits = types.filter(elem => belongsTo.id === elem.id && elem.type === relationships.type).length;
+
+					let isExits = types.filter(elem => belongsTo.id === elem.id && elem.type === payloadType || (belongsTo.id === elem.id || elem.type === relationships.type)).length;
 
 					if (relationships.kind === 'belongsTo' && isExits === 0) {
 						this.serializeBelongsTo(belongsTo, json, relationships, true, types);
@@ -185,8 +186,8 @@ export default DS.JSONAPISerializer.extend({
 				}
 
 				data[i] = {
-					type: payloadType,
-					id: item.id
+					id: item.id,
+					type: payloadType
 				};
 
 
@@ -207,13 +208,13 @@ export default DS.JSONAPISerializer.extend({
 				});
 
 				types.push({
-					type: payloadType,
-					id: item.id
+					id: item.id,
+					type: payloadType
 				});
 
 				// TODO 需要递归的实现多层级的关系序列化，但是又有效率问题，先暂停
 				item.eachRelationship((key, relationships) => {
-					let isExits = types.filter(elem => item.id === elem.id && elem.type === relationships.type).length;
+					let isExits = types.filter(elem => item.id === elem.id && elem.type === payloadType || (item.id === elem.id || elem.type === relationships.type)).length;
 
 					if (relationships.kind === 'belongsTo' && isExits === 0) {
 						this.serializeBelongsTo(item, json, relationships, true, types);

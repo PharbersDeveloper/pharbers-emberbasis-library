@@ -1,9 +1,8 @@
-import Service from '@ember/service';
+import EmberObject from '@ember/object';
 import Base from './rsa-base';
 
-export default Service.extend(Base, {
+export default EmberObject.extend(Base, {
 	init() {
-		this._super(...arguments);
 		this.initInstance();
 	},
 	publicKey: '',
