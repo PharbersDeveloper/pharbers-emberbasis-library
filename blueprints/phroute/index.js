@@ -134,7 +134,7 @@ function appendBusinessRoute(action, name, options) {
 	let routerPath = path.join.apply(null, findBusinessRoute(name, options)),
 		source = fs.readFileSync(routerPath, 'utf-8'), newSource = '';
 
-	newSource = source.replace('#service#,', `${name}: service(),`);
+	newSource = source.replace('"service": "service",', `${name}: service(),`);
 	fs.writeFileSync(routerPath, newSource);
 }
 

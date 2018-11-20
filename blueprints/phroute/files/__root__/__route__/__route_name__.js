@@ -3,7 +3,7 @@ import { inject as service } from '@ember/service';
 
 
 export default Route.extend({
-	#service#,
+	"service": "service",
 	setupController(controller, model) {
 		this._super(controller, model);
 		// this.controllerFor('application')
