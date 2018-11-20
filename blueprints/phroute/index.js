@@ -131,17 +131,11 @@ module.exports = {
 };
 
 function appendBusinessRoute(action, name, options) {
-	this.ui.writeLine('12345655');
 	let routerPath = path.join.apply(null, findBusinessRoute(name, options)),
-		source = fs.readFileSync(routerPath, 'utf-8'),
-		routes = new EmberRouterGenerator(source),
-		newRoutes = routes[action](name, options);
+		source = fs.readFileSync(routerPath, 'utf-8'), newSource = '';
 
-	this.ui.writeLine(routerPath);
-	this.ui.writeLine(source);
-	this.ui.writeLine(routes);
-	this.ui.writeLine(newRoutes);
-	// fs.writeFileSync(routerPath, newRoutes.code());
+	newSource = source.replace('#service#,', `${name}: service(),`);
+	fs.writeFileSync(routerPath, newSource);
 }
 
 function updateRouter(action, options) {
@@ -154,24 +148,25 @@ function updateRouter(action, options) {
 
 	if (this.shouldTouchRouter(entity.name, options)) {
 		writeRoute(action, entity.name, options);
+
+		this.ui.writeLine('updating router');
+		this._writeStatusToUI(chalk[color], action + ' route', entity.name);
+
 		if (action !== 'remove') {
 			appendBusinessRoute.call(this, action, entity.name, options);
 		}
-		this.ui.writeLine('updating router');
-		this._writeStatusToUI(chalk[color], action + ' route', entity.name);
 	}
 }
 
 function findBusinessRoute(name, options) {
 	let routerPathParts = [options.project.root],
-		root = isModuleUnificationProject(options.project) ? 'src' : 'app/routes';
+		root = isModuleUnificationProject(options.project) ? 'src' : 'app';
 
-	// if (options.pod) {
-	// 	root += options.podPath + '/' + name;
-	// 	// return path.join(options.podPath, options.locals.moduleName);
-	// } else {
-	// 	root += '/' + name;
-	// }
+	if (options.pod) {
+		root += options.podPath;
+	} else {
+		root += '/routes/';
+	}
 
 	if (options.dummy && options.project.isEmberCLIAddon()) {
 		routerPathParts = routerPathParts.concat(['tests', 'dummy', root, name + '.js']);

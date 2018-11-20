@@ -57,8 +57,8 @@ export default Route.extend({
 		let conditions = this.get('test').object2JsonApi(req);
 		this.get('logger').log(conditions)
 
-		return this.get('test').queryMultipleObject('/api/v1/login/0', 'auth', {});
-		// return this.get('test').queryObject('/api/v1/login/2', 'auth', {});
+		return this.get('test').queryMultipleObject('api/v1/login/0', 'auth', {});
+		// return this.get('test').queryObject('api/v1/login/2', 'auth', {});
 
 		// ["北京", "上海", "广东"].forEach((name, index) => {
 		//     this.get('pmController').get('Store').createModel('provinces', {

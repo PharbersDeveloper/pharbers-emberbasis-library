@@ -8,7 +8,7 @@ import { dasherize } from '@ember/string';
  */
 
 export default PharbersSerializer.extend({
-    keyForAttribute(key) {
+	keyForAttribute(key) {
 		return key
 	},
 	keyForRelationship(key) {

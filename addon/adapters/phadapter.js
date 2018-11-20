@@ -12,6 +12,7 @@ export function InvalidError(resolve, reject, data) {
 
 export default DS.JSONAPIAdapter.extend({
 	cookies: inject(),
+	namespace: '/',
 	handleResponse() {
 		// 500 501 - 504
 		return this._super(...arguments);
@@ -26,7 +27,7 @@ export default DS.JSONAPIAdapter.extend({
 	queryObject(url, store, type, jsonObject) {
 		this.set('headers.Authorization', 'bearer ' + this.get('cookies').read('token'));
 		return new rsvp.Promise((resolve, reject) => {
-			this.ajax(url, 'POST', { data: jsonObject })
+			this.ajax(this.get('namespace') + url, 'POST', { data: jsonObject })
 				.then(data => InvalidError(resolve, reject, data))
 				.catch(() => reject('failed'));
 		});
@@ -34,7 +35,7 @@ export default DS.JSONAPIAdapter.extend({
 	queryMultipleObject(url, store, type, jsonObject) {
 		this.set('headers.Authorization', 'bearer ' + this.get('cookies').read('token'));
 		return new rsvp.Promise((resolve, reject) => {
-			this.ajax(url, 'POST', { data: jsonObject })
+			this.ajax(this.get('namespace') + url, 'POST', { data: jsonObject })
 				.then(data => InvalidError(resolve, reject, data))
 				.catch(() => reject('failed'));
 		});
@@ -42,7 +43,7 @@ export default DS.JSONAPIAdapter.extend({
 	transaction(url, store, type, jsonObject) {
 		this.set('headers.Authorization', 'bearer ' + this.get('cookies').read('token'));
 		return new rsvp.Promise((resolve, reject) => {
-			this.ajax(url, 'POST', { data: jsonObject })
+			this.ajax(this.get('namespace') + url, 'POST', { data: jsonObject })
 				.then(data => InvalidError(resolve, reject, data))
 				.catch(() => reject('failed'));
 		});
