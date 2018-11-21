@@ -1,15 +1,18 @@
 import Route from '@ember/routing/route';
 import { later } from '@ember/runloop';
 import { A } from '@ember/array';
-import { inject } from '@ember/service';
+import { inject as service } from '@ember/service';
 
 export default Route.extend({
-	test: inject(),
-
+	application_route: service(),
+	application_controller: service(),
+	init() {
+		this.get('logger').log(this)
+	},
 	actions: {
 		hi() {
-			let auth = this.get('test').queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');
-			this.get('logger').log(this.get('test').object2JsonApi(auth, false));
+			let auth = this.get('application_route').queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');
+			this.get('logger').log(this.get('application_route').object2JsonApi(auth, false));
 		},
 		reload() {
 			this.refresh()
@@ -32,21 +35,21 @@ export default Route.extend({
 		// this.get('logger').log(json)
 
 
-		let req = this.get('test').createModel('request', {
+		let req = this.get('application_controller').createModel('request', {
 			id: '1',
 			res: 'bind_course_region_rep',
-			fmcond: this.get('test').createModel('fmcond', {
+			fmcond: this.get('application_controller').createModel('fmcond', {
 				id: '1',
 				skip: 0,
 				take: 1000
 			}),
 			eqcond: A([
-				this.get('test').createModel('eqcond', {
+				this.get('application_controller').createModel('eqcond', {
 					id: '1',
 					key: 'region_id',
 					val: 'a',
 				}),
-				this.get('test').createModel('eqcond', {
+				this.get('application_controller').createModel('eqcond', {
 					id: '2',
 					key: 'course_id',
 					val: 12,
@@ -54,11 +57,11 @@ export default Route.extend({
 			)
 		});
 
-		let conditions = this.get('test').object2JsonApi(req);
+		let conditions = this.get('application_route').object2JsonApi(req);
 		this.get('logger').log(conditions)
 
-		return this.get('test').queryMultipleObject('api/v1/login/0', 'auth', {});
-		// return this.get('test').queryObject('api/v1/login/2', 'auth', {});
+		return this.get('application_route').queryMultipleObject('api/v1/login/0', 'auth', {});
+		// return this.get('application_route').queryObject('api/v1/login/2', 'auth', {});
 
 		// ["北京", "上海", "广东"].forEach((name, index) => {
 		//     this.get('pmController').get('Store').createModel('provinces', {

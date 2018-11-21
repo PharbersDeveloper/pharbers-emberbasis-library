@@ -1,6 +1,6 @@
 import { moduleFor, test } from 'ember-qunit';
 
-moduleFor('service:phstore', 'Unit | Service | phstore', {
+moduleFor('service:phinject', 'Unit | Service | phinject', {
   // Specify the other units that are required for this test.
   // needs: ['service:foo']
 });

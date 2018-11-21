@@ -1,11 +1,11 @@
 {{outlet}}
-{{!-- {{#parent-c next=(action 'next') next2=(action 'next2') current=(action 'current') as |c| }}
+{{#parent-c next=(action 'next') next2=(action 'next2') current=(action 'current') as |c| }}
     {{#c.child }}
         {{show-c}}
     {{/c.child}}
 {{/parent-c}}
 
-{{#each model.errors as |error|}}
+{{!-- {{#each model.errors as |error|}}
     {{log error}}
   <div class="error">
     {{error.code}}

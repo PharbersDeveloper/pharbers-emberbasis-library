@@ -37,11 +37,23 @@ module.exports = {
 				}
 				return options.locals.moduleName;
 			},
-			__service_name__() {
+			__controller_name__() {
+				if (options.pod) {
+					return 'controller';
+				}
+				return options.locals.moduleName;
+			},
+			__service_route_name__() {
 				if (options.pod) {
 					return 'service';
 				}
-				return options.locals.moduleName;
+				return options.locals.moduleName + '-route';
+			},
+			__service_controller_name__() {
+				if (options.pod) {
+					return 'service';
+				}
+				return options.locals.moduleName + '-controller';
 			},
 			__route__() {
 				if (options.pod) {
@@ -49,9 +61,21 @@ module.exports = {
 				}
 				return 'routes';
 			},
-			__service__() {
+			__controller__() {
 				if (options.pod) {
 					return path.join(options.podPath, options.locals.moduleName);
+				}
+				return 'controllers';
+			},
+			__service_route__() {
+				if (options.pod) {
+					return path.join(options.podPath, options.locals.moduleName + '-route');
+				}
+				return 'services';
+			},
+			__service_controller__() {
+				if (options.pod) {
+					return path.join(options.podPath, options.locals.moduleName + '-controller');
 				}
 				return 'services';
 			},
@@ -131,10 +155,18 @@ module.exports = {
 };
 
 function appendBusinessRoute(action, name, options) {
-	let routerPath = path.join.apply(null, findBusinessRoute(name, options)),
+	let routerPath = path.join.apply(null, findBusinessFile(name, options, 'routes')),
 		source = fs.readFileSync(routerPath, 'utf-8'), newSource = '';
 
-	newSource = source.replace('"service": "service",', `${name}: service(),`);
+	newSource = source.replace('"service": "service",', `${name}_route: service(),\n\t${name}_controller: service(),`);
+	fs.writeFileSync(routerPath, newSource);
+}
+
+function appendBusinessController(action, name, options) {
+	let routerPath = path.join.apply(null, findBusinessFile(name, options, 'controllers')),
+		source = fs.readFileSync(routerPath, 'utf-8'), newSource = '';
+
+	newSource = source.replace('"service": "service",', `${name}_controller: service(),`);
 	fs.writeFileSync(routerPath, newSource);
 }
 
@@ -154,18 +186,19 @@ function updateRouter(action, options) {
 
 		if (action !== 'remove') {
 			appendBusinessRoute.call(this, action, entity.name, options);
+			appendBusinessController.call(this, action, entity.name, options);
 		}
 	}
 }
 
-function findBusinessRoute(name, options) {
+function findBusinessFile(name, options, type) {
 	let routerPathParts = [options.project.root],
 		root = isModuleUnificationProject(options.project) ? 'src' : 'app';
 
 	if (options.pod) {
 		root += options.podPath;
 	} else {
-		root += '/routes/';
+		root += `/${type}/`;
 	}
 
 	if (options.dummy && options.project.isEmberCLIAddon()) {

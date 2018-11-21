@@ -6,9 +6,21 @@ export function initialize(application) {
 	// eslint-disable-next-line no-unneeded-ternary
 	let environment = env.environment === 'production' ? false : true;
 	let Logger = EmberObject.extend({
-		log(m) { if (environment) { window.console.log(m); } },
-		warn(m) { if (environment) { window.console.warn(m); } },
-		error(m) { if (environment) { window.console.error(m); } }
+		log(m) {
+			if (environment) {
+				window.console.log(m);
+			}
+		},
+		warn(m) {
+			if (environment) {
+				window.console.warn(m);
+			}
+		},
+		error(m) {
+			if (environment) {
+				window.console.error(m);
+			}
+		}
 	});
 
 	application.register('logger:main', Logger);

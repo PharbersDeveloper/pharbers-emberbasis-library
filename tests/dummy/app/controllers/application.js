@@ -3,23 +3,24 @@ import Controller from '@ember/controller';
 import { inject as service } from '@ember/service';
 
 export default Controller.extend({
-	test: service(),
+	application_controller: service(),
     init() {
         this._super(...arguments);
         // this.JSRSA()
-        this.BusinessLogic()
+		this.BusinessLogic();
+
         // this.get('logger').log(this.get('cookie').write('ad', 'dasdsa'))
         // this.get('cookie').write('aa', 'bb', { path: '/' })
     },
     actions: {
         next(data) {
             this.get('logger').log(`===>1 ${data}`)
-            this.get('cookie').clean('aa', 'token')()
+            this.get('helpers').cookieClean('aa', 'token')()
         },
         next2(data) {
             this.get('logger').log(`===> ${data}`)
         },
-        current(data) {
+        current(data) {r
             this.get('logger').log(`===> ${data}`)
         }
 
@@ -53,7 +54,7 @@ export default Controller.extend({
         function Func(name, age) {
             this.get('logger').log(`Say Hi ${name}，I‘am Age ${age}`);
         }
-		this.get('test').injectFunc(Func);
-        this.get('test').getInjectFuncInstance('Func', 'Alex', 24);
+		this.get('application_controller').injectFunc(Func);
+        this.get('application_controller').getInjectFuncInstance('Func', 'Alex', 24);
     }
 });
