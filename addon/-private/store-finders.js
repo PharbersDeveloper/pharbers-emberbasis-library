@@ -3,6 +3,7 @@ import {
     _guard,
     _objectIsAlive
 } from "./store-common";
+import { Promise } from 'rsvp';
 
 import { normalizeResponseHelper } from "./serializer-response";
 import { serializerForAdapter } from "./serializers";
