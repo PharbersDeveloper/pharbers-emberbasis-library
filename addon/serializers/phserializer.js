@@ -67,15 +67,17 @@ export default DS.JSONAPISerializer.extend({
 		return relationships;
 	},
 	normalizeResponse(store, model, payload, id, requestType) {
+		let newPayLoad = typeof payload.data === 'undefined' ? { data: {} } : payload;
+
 		switch (requestType) {
 		case 'queryObject':
-			return this.normalizeQueryRecordResponse(store, model, payload, id, requestType);
+			return this.normalizeQueryRecordResponse(store, model, newPayLoad, id, requestType);
 		case 'queryMultipleObject':
-			return this.normalizeQueryResponse(store, model, payload, id, requestType);
+			return this.normalizeQueryResponse(store, model, newPayLoad, id, requestType);
 		case 'transaction':
-			return this.normalizeQueryRecordResponse(store, model, payload, id, requestType);
+			return this.normalizeQueryRecordResponse(store, model, newPayLoad, id, requestType);
 		default:
-			return this._super(store, model, payload, id, requestType);
+			return this._super(store, model, newPayLoad, id, requestType);
 		}
 	},
 	serializeBelongsTo(snapshot, json, relationship, isRecursive = false, types = []) {
