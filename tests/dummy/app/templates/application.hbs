@@ -16,15 +16,18 @@
 	{{input value=item.token}}
 	{{#each item.mult_data as |item2|}}
 		{{input value=item2.name}}
+		{{#each item2.people as |item3|}}
+			{{input value=item3.name}}
+		{{/each}}
+		<br>
+		<br>
 	{{/each}}
 {{/each}}
 
-{{input value=model.token}}
+{{!-- {{input value=model.token}}
 {{#each model.mult_data as |item2|}}
 	{{input value=item2.name}}
-{{/each}}
-
-{{test.publicKey}}
+{{/each}} --}}
 
 <button {{action "reload"}}>reload</button>
 <button {{action "hi"}}>hi</button>

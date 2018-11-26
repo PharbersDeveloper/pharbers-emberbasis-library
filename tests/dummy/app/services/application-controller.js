@@ -25,6 +25,9 @@ export default Service.extend({
 	model2LocalStorge(model) {
 		return this.get('phcache').model2LocalStorge(model);
 	},
+	resetChangedModelAttr(model) {
+		return this.get('phcache').resetChangedModelAttr(model);
+	},
 	injectFunc(funcReference) {
 		return this.get('phinject').injectFunc(funcReference);
 	},

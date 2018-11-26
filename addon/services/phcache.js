@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import Service, { inject } from '@ember/service';
 import createModelEmberObject from 'pharbers-emberbasis-library/-private/cache/createModel';
 import removeModelByIDEmberObject from 'pharbers-emberbasis-library/-private/cache/removeModelByID';
@@ -6,13 +7,21 @@ import updataModelByIDEmberObject from 'pharbers-emberbasis-library/-private/cac
 import queryModelByIDEmberObject from 'pharbers-emberbasis-library/-private/cache/queryModelByID';
 import queryModelByAllEmberObject from 'pharbers-emberbasis-library/-private/cache/queryModelByAll';
 import model2LocalStorgeEmberObject from 'pharbers-emberbasis-library/-private/cache/model2LocalStorge';
+import resetChangedModelAttrEmberObject from 'pharbers-emberbasis-library/-private/cache/resetChangedModelAttr';
+
+import { resrtChangedModelAttr } from './util/cacheResetChangedModelAttr';
 
 export default Service.extend({
 	store: inject(),
 	createModel(modelName, inputProperties) {
-		let o = createModelEmberObject.create({ 'store': this.get('store') });
+		let o = createModelEmberObject.create({ 'store': this.get('store') }), modelInstance = null;
 
-		return o.createModel(modelName, inputProperties);
+		modelInstance = o.createModel(modelName, inputProperties);
+		modelInstance.eachAttribute(key => {
+			modelInstance._internalModel.__data[key] = modelInstance.get(key);
+		});
+
+		return modelInstance;
 	},
 	queryModelByID(modelName, id) {
 		let o = queryModelByIDEmberObject.create({ 'store': this.get('store') });
@@ -35,13 +44,26 @@ export default Service.extend({
 		return o.removeModelByAll(modelName);
 	},
 	updataModelByID(modelName, id, inputProperties) {
-		let o = updataModelByIDEmberObject.create({ 'store': this.get('store') });
+		let o = updataModelByIDEmberObject.create({ 'store': this.get('store') }), modelInstance = null;
 
-		return o.updataModelByID(modelName, id, inputProperties);
+		modelInstance = o.updataModelByID(modelName, id, inputProperties);
+		modelInstance.eachAttribute(key => {
+			modelInstance._internalModel.__data[key] = modelInstance.get(key);
+		});
+		return modelInstance;
 	},
 	model2LocalStorge(model) {
 		let o = model2LocalStorgeEmberObject.create({ 'store': this.get('store') });
 
 		return o.model2LocalStorge(model);
+	},
+	resetChangedModelAttr(model) {
+		let o = resetChangedModelAttrEmberObject.create({ 'store': this.get('store') }),
+			id = model.get('id'),
+			modelName = model._internalModel.modelName;
+
+		resrtChangedModelAttr(o, model);
+		return this.queryModelByID(modelName, id);//o.resetChangedModelAttr(model);
 	}
+
 });

@@ -39,9 +39,11 @@ export default Service.extend({
 			serverModelSerialize(data, newData);
 
 			data.forEach(model => {
+				window.console.info('123')
 				this.get('store').__cleanModel(this.get('store'), model.serialize({ includeId: true }));
 			});
 
+			window.console.info(newData);
 			this.get('store').pushPayload(modelName, newData);
 			return this.get('store').peekAll(modelName);
 		});

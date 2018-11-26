@@ -6,13 +6,12 @@ import { inject as service } from '@ember/service';
 export default Route.extend({
 	application_route: service(),
 	application_controller: service(),
-	init() {
-		this.get('logger').log(this)
-	},
 	actions: {
 		hi() {
-			let auth = this.get('application_route').queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');
+			let auth = this.get('application_controller').queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');//queryModelByAll('auth')//queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');
 			this.get('logger').log(this.get('application_route').object2JsonApi(auth, false));
+
+			this.get('logger').log(this.get('application_controller').resetChangedModelAttr(auth));
 		},
 		reload() {
 			this.refresh()
