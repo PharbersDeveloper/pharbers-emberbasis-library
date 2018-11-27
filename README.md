@@ -1,5 +1,5 @@
 # pharbers-emberbasis-library
-
+# V2.0.0-Beta
 本项目是Ember Addon基于Ember 2.18.2，中间复写了很多Ember的Function，主要是在Ember这个前端框架上为Pharbers封装一层符合公司的中间件，目前还在开发中，文档会持续更新。
 目前项目集成
 1. RSA（非对称加密）
