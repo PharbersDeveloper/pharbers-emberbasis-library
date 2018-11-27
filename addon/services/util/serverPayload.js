@@ -1,7 +1,7 @@
 /* eslint-disable no-underscore-dangle */
 import { isArray } from '@ember/array';
 
-export function setDataRelationships(model, json, existData) {
+export function setDataRelationships(model, json/*, existData*/) {
 	model.eachRelationship((key, descriptor) => {
 		let relationships = json['relationships'] = {}, relationshipKey = relationships[key] = {};
 
@@ -9,34 +9,43 @@ export function setDataRelationships(model, json, existData) {
 			let data = relationshipKey['data'] = [];
 
 			model.get(key).toArray().forEach(result => {
-				let payloadType = '', isExits = 0;
+				// let payloadType = '', isExits = 0;
 
-				payloadType = result.store.serializerFor(result._internalModel.modelName).payloadKeyFromModelName(result._internalModel.modelName);
-				isExits = existData.filter(elem => elem.id === result.get('id') && elem.type === payloadType).length;
+				// payloadType = result.store.serializerFor(result._internalModel.modelName).payloadKeyFromModelName(result._internalModel.modelName);
+				// isExits = existData.filter(elem => elem.id === result.get('id') && elem.type === payloadType).length;
 
-				if (isExits === 0) {
-					data.push({
-						id: result.get('id'),
-						type: descriptor.type
-					});
-				} else {
-					delete relationships[key];
-				}
+
+				data.push({
+					id: result.get('id'),
+					type: descriptor.type
+				});
+				// if (isExits === 0) {
+				// 	data.push({
+				// 		id: result.get('id'),
+				// 		type: descriptor.type
+				// 	});
+				// } else {
+				// 	delete relationships[key];
+				// }
 			});
 		} else {
-			let payloadType = '', isExits = 0;
+			// let payloadType = '', isExits = 0;
+			// debugger
+			// payloadType = model.store.serializerFor(model.get(key)._internalModel.modelName).payloadKeyFromModelName(model.get(key)._internalModel.modelName);
+			// isExits = existData.filter(elem => elem.id === model.get('id') && elem.type === payloadType).length;
 
-			payloadType = model.store.serializerFor(model._internalModel.modelName).payloadKeyFromModelName(model._internalModel.modelName);
-			isExits = existData.filter(elem => elem.id === model.get('id') && elem.type === payloadType).length;
-
-			if (isExits === 0) {
-				relationshipKey['data'] = {
-					id: model.get('id'),
-					type: descriptor.type
-				};
-			} else {
-				delete relationships[key];
-			}
+			relationshipKey['data'] = {
+				id: model.get('id'),
+				type: descriptor.type
+			};
+			// if (isExits === 0) {
+			// 	relationshipKey['data'] = {
+			// 		id: model.get('id'),
+			// 		type: descriptor.type
+			// 	};
+			// } else {
+			// 	delete relationships[key];
+			// }
 		}
 	});
 }
@@ -45,27 +54,39 @@ export function serverIncludedSerialize(model, json, existData) {
 	model.eachRelationship((key, descriptor) => {
 		if (descriptor.kind === 'hasMany') {
 			model.get(key).toArray().forEach(result => {
-				let m = {}, isExits = 0;
+				let m = {}/*, isExits = 0*/;
 
 				m['id'] = result.get('id');
 				m['type'] = result.store.serializerFor(result._internalModel.modelName).payloadKeyFromModelName(result._internalModel.modelName);//result.serialize({ includeId: true }).type;
 
-				isExits = existData.filter(elem => elem.id === m.id && elem.type === m.type).length;
+				// isExits = existData.filter(elem => elem.id === m.id && elem.type === m.type).length;
 
-				if (isExits === 0) {
-					result.eachAttribute(name => {
-						let attributes = m['attributes'] = {};
+				// if (isExits === 0) {
+				// 	result.eachAttribute(name => {
+				// 		let attributes = m['attributes'] = {};
 
-						attributes[name] = result.data[name];
-					});
+				// 		attributes[name] = result.data[name];
+				// 	});
 
-					json.push(m);
+				// 	json.push(m);
 
-					existData.push({id: m.id, type: m.type});
+				// 	existData.push({id: m.id, type: m.type});
 
-					setDataRelationships(result, m, existData);
-					serverIncludedSerialize(result, json, existData);
-				}
+				// 	setDataRelationships(result, m, existData);
+				// 	serverIncludedSerialize(result, json, existData);
+				// }
+				result.eachAttribute(name => {
+					let attributes = m['attributes'] = {};
+
+					attributes[name] = result.data[name];
+				});
+
+				json.push(m);
+
+				existData.push({id: m.id, type: m.type});
+
+				setDataRelationships(result, m, existData);
+				serverIncludedSerialize(result, json, existData);
 			});
 		} else {
 			let m = {}, isExits = 0;

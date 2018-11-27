@@ -24,7 +24,7 @@ export function recursiveResetChangeRelationshipModelAttr(execInstance, model, f
 
 			if (isExits === 0) {
 				filterModelAndIdList.push({id, type});
-				recursiveResetChangeRelationshipModelAttr(execInstance, model, filterModelAndIdList);
+				recursiveResetChangeRelationshipModelAttr(execInstance, model.get(key), filterModelAndIdList);
 			}
 		}
 	});
@@ -34,12 +34,12 @@ export function resrtChangedModelAttr(execInstance, model) {
 	let filterModelAndIdList = [];
 
 	if (isArray(model)) {
-		// recursiveResrtChangedModelAttr(execInstance, model);
 		model.forEach(single => {
 			let type = single.store.serializerFor(single._internalModel.modelName).payloadKeyFromModelName(single._internalModel.modelName), id = single.get('id');
 
+			execInstance.resetChangedModelAttr(single);
 			filterModelAndIdList.push({id, type});
-			recursiveResetChangeRelationshipModelAttr(execInstance, model, filterModelAndIdList);
+			recursiveResetChangeRelationshipModelAttr(execInstance, single, filterModelAndIdList);
 		});
 	} else {
 		let type = model.store.serializerFor(model._internalModel.modelName).payloadKeyFromModelName(model._internalModel.modelName), id = model.get('id');

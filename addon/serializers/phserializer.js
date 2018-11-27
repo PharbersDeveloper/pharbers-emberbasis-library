@@ -2,12 +2,11 @@
 /* eslint-disable no-underscore-dangle */
 /* eslint-disable new-cap */
 import DS from 'ember-data';
-// import { dasherize } from '@ember/string';
 import { assert, deprecate } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
 import { get } from '@ember/object';
 import { isEnabled } from '@ember/canary-features';
-import { A } from '@ember/array';
+import { A, isArray } from '@ember/array';
 
 const typeForRelationshipMeta = function (relationshipMeta, relationships) {
 	let modelName = '';
@@ -142,7 +141,15 @@ export default DS.JSONAPISerializer.extend({
 				// TODO 需要递归的实现多层级的关系序列化，但是又有效率问题，先暂停
 				belongsTo.eachRelationship((key, relationships) => {
 
-					let isExits = types.filter(elem => belongsTo.id === elem.id && elem.type === relationships.type /*|| belongsTo.id === elem.id && elem.type === payloadType*/).length;
+					let model = belongsTo.record.get(key), isExits = 0;
+
+					if (isArray(model)) {
+						isExits = model.map(m => {
+							return types.filter(elem => m.id === elem.id && relationships.type === elem.type).length;
+						})[0];
+					} else {
+						isExits = types.filter(elem => model.id === elem.id && relationships.type === elem.type).length;
+					}
 
 					if (relationships.kind === 'belongsTo' && isExits === 0) {
 						this.serializeBelongsTo(belongsTo, json, relationships, true, types);
@@ -197,7 +204,11 @@ export default DS.JSONAPISerializer.extend({
 					json.relationships[payloadKey] = { data };
 					types.push({ id: snapshot.id, type: snapshot.modelName });
 				} else {
-					let tt = json.included.find(elem => elem.id === snapshot.id && elem.type === this.payloadKeyFromModelName(snapshot.modelName));
+					let tt = json.included.find(elem => {
+
+
+						return elem.id === snapshot.id && elem.type === this.payloadKeyFromModelName(snapshot.modelName);
+					});
 
 					tt.relationships = tt.relationships || {};
 					tt.relationships[payloadKey] = { data };
@@ -217,7 +228,15 @@ export default DS.JSONAPISerializer.extend({
 				// TODO 需要递归的实现多层级的关系序列化，但是又有效率问题，先暂停
 				item.eachRelationship((key, relationships) => {
 
-					let isExits = types.filter(elem => item.id === elem.id && elem.type === relationships.type /*|| item.id === elem.id && elem.type === payloadType*/).length;
+					let model = item.record.get(key), isExits = 0;
+
+					if (isArray(model)) {
+						isExits = model.map(m => {
+							return types.filter(elem => m.id === elem.id && relationships.type === elem.type).length;
+						})[0];
+					} else {
+						isExits = types.filter(elem => model.id === elem.id && relationships.type === elem.type).length;
+					}
 
 					if (relationships.kind === 'belongsTo' && isExits === 0) {
 						this.serializeBelongsTo(item, json, relationships, true, types);

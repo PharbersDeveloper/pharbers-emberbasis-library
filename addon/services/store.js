@@ -1,3 +1,4 @@
+/* eslint-disable no-underscore-dangle */
 import DS from 'ember-data';
 import normalizeModelName from '../-private/normalize-model-name';
 import { isArray } from '@ember/array';
@@ -93,18 +94,17 @@ export default DS.Store.extend({
 	 * @param {*} recordData
 	 */
 	__cleanModel(store, recordData) {
-		const MODELID = recordData.id, TYPE = recordData.type, RELATIONSHIPS = recordData.relationships || {};
+		const MODELID = recordData.id, TYPE = store.serializerFor(recordData._internalModel.modelName).payloadKeyFromModelName(recordData._internalModel.modelName); //TYPE = recordData.type; //RELATIONSHIPS = recordData.relationships || {};
 
 		store.peekRecord(TYPE, MODELID).unloadRecord();//destroyRecord().then(rec => rec.unloadRecord());
-		Object.keys(RELATIONSHIPS).forEach(elem => {
-			let temp = RELATIONSHIPS[elem].data;
 
-			if (Array.isArray(temp)) {
-				temp.forEach(d => {
-					store.peekRecord(d.type, d.id).unloadRecord();//destroyRecord().then(rec => rec.unloadRecord());
+		recordData.eachRelationship((key, descriptor) => {
+			if (descriptor.kind === 'hasMany') {
+				recordData.get(key).toArray().forEach(result => {
+					this.__cleanModel(store, result);
 				});
 			} else {
-				store.peekRecord(temp.type, temp.id).unloadRecord();//.destroyRecord().then(rec => rec.unloadRecord());
+				this.__cleanModel(store, recordData.get(key));
 			}
 		});
 	},
@@ -115,17 +115,17 @@ export default DS.Store.extend({
      * @param {Boolean} isClean
      */
 	__object2JsonApi(model, isClean = true) {
-		let data = _object2JsonApi(model), modelIsArray = isArray(model);
+		let data = _object2JsonApi(model);
 
-		if (modelIsArray) {
+		if (isArray(model)) {
 			model.forEach(reocrd => {
 				if (isClean) {
-					this.__cleanModel(model.store, reocrd.serialize({ includeId: true }));
+					this.__cleanModel(model.store, reocrd);
 				}
 			});
 		}
 		if (isClean) {
-			this.__cleanModel(model.store, model.serialize({ includeId: true }));
+			this.__cleanModel(model.store, model);
 		}
 		return data;
 	},

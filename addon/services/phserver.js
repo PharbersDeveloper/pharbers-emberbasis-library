@@ -21,7 +21,7 @@ export default Service.extend({
 			serverModelSerialize(data, newData);
 
 
-			this.get('store').__cleanModel(this.get('store'), data.serialize({ includeId: true }));
+			this.get('store').__cleanModel(this.get('store'), data);
 			this.get('store').pushPayload(modelName, newData);
 
 			return this.get('store').peekRecord(modelName, newData.data.id);
@@ -38,12 +38,12 @@ export default Service.extend({
 
 			serverModelSerialize(data, newData);
 
+			this.get('logger').log(newData);
+
 			data.forEach(model => {
-				window.console.info('123')
-				this.get('store').__cleanModel(this.get('store'), model.serialize({ includeId: true }));
+				this.get('store').__cleanModel(this.get('store'), model);
 			});
 
-			window.console.info(newData);
 			this.get('store').pushPayload(modelName, newData);
 			return this.get('store').peekAll(modelName);
 		});

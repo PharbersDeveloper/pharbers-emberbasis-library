@@ -58,12 +58,10 @@ export default Service.extend({
 		return o.model2LocalStorge(model);
 	},
 	resetChangedModelAttr(model) {
-		let o = resetChangedModelAttrEmberObject.create({ 'store': this.get('store') }),
-			id = model.get('id'),
-			modelName = model._internalModel.modelName;
+		let o = resetChangedModelAttrEmberObject.create({ 'store': this.get('store') });
 
 		resrtChangedModelAttr(o, model);
-		return this.queryModelByID(modelName, id);//o.resetChangedModelAttr(model);
+		return model;
 	}
 
 });

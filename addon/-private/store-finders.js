@@ -238,10 +238,6 @@ export function _removeModelByAll(store, modelName) {
 	store.unloadAll(modelName);
 }
 
-// const observerModelToLocalStorge = EmberObject.create({
-
-// });
-
 export function _model2LocalStorge(modelClass) {
 	let modelIsArray = null, temp = null;
 
@@ -249,29 +245,9 @@ export function _model2LocalStorge(modelClass) {
 	temp = _object2JsonApi(modelClass);
 
 	if (modelIsArray) {
-		// 监测涉及到深复制，先暂停
-		// observerModelToLocalStorge.set(modelClass.get('firstObject')._internalModel.modelName, modelClass);
-		// let {attributes, relationships} = modelClass.get('firstObject').serialize()
-		// Object.keys(attributes).forEach(key => {
-
-		// })
-		// Object.keys(relationships).forEach(key => {
-
-		// })
-		// window.console.info(attributes)
-		// window.console.info(relationships)
-		// observerModelToLocalStorge.reopen({
-		//     change: observer('mm.@each.token', function() {
-		//         window.console.info(123)
-		//     })
-		// })
 		localStorage.setItem(modelClass.get('firstObject')._internalModel.modelName, JSON.stringify(temp));
 	} else {
 		// observerModelToLocalStorge.set(modelClass._internalModel.modelName, modelClass);
 		localStorage.setItem(modelClass._internalModel.modelName, JSON.stringify(temp));
 	}
 }
-
-// export function _localStorage2Model(key) {
-
-// }

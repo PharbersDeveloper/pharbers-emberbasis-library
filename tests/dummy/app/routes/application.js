@@ -8,7 +8,7 @@ export default Route.extend({
 	application_controller: service(),
 	actions: {
 		hi() {
-			let auth = this.get('application_controller').queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');//queryModelByAll('auth')//queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');
+			let auth = this.get('application_controller').queryModelByAll('auth');//queryModelByAll('auth')//queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');
 			this.get('logger').log(this.get('application_route').object2JsonApi(auth, false));
 
 			this.get('logger').log(this.get('application_controller').resetChangedModelAttr(auth));
