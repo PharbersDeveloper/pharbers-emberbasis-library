@@ -1,1 +1,14 @@
-{{outlet}}
+{{#each model as |item|}}
+	{{input value=item.token}}
+	{{#each item.mult_data as |item2|}}
+		{{input value=item2.name}}
+		{{#each item2.people as |item3|}}
+			{{input value=item3.name}}
+		{{/each}}
+		<br>
+		<br>
+	{{/each}}
+{{/each}}
+
+<button {{action "delete"}}>delete</button>
+<button {{action "gotopre"}}>Pre</button>

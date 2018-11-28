@@ -2,8 +2,9 @@
 import DS from 'ember-data';
 import normalizeModelName from '../-private/normalize-model-name';
 import { isArray } from '@ember/array';
-import { isPresent } from '@ember/utils';
+import { isPresent, isEmpty } from '@ember/utils';
 import { assert } from '@ember/debug';
+
 
 
 import {
@@ -92,21 +93,24 @@ export default DS.Store.extend({
 	 * 删除model包括关联关系
 	 * @param {*} store
 	 * @param {*} recordData
+	 * destroyRecord().then(rec => rec.unloadRecord());
 	 */
 	__cleanModel(store, recordData) {
-		const MODELID = recordData.id, TYPE = store.serializerFor(recordData._internalModel.modelName).payloadKeyFromModelName(recordData._internalModel.modelName); //TYPE = recordData.type; //RELATIONSHIPS = recordData.relationships || {};
+		if (!isEmpty(recordData)) {
+			const modelId = recordData.id, type = store.serializerFor(recordData._internalModel.modelName).payloadKeyFromModelName(recordData._internalModel.modelName);
 
-		store.peekRecord(TYPE, MODELID).unloadRecord();//destroyRecord().then(rec => rec.unloadRecord());
+			store.peekRecord(type, modelId).unloadRecord();
 
-		recordData.eachRelationship((key, descriptor) => {
-			if (descriptor.kind === 'hasMany') {
-				recordData.get(key).toArray().forEach(result => {
-					this.__cleanModel(store, result);
-				});
-			} else {
-				this.__cleanModel(store, recordData.get(key));
-			}
-		});
+			recordData.eachRelationship((key, descriptor) => {
+				if (descriptor.kind === 'hasMany') {
+					recordData.get(key).toArray().forEach(result => {
+						this.__cleanModel(store, result);
+					});
+				} else {
+					this.__cleanModel(store, recordData.get(key));
+				}
+			});
+		}
 	},
 
 	/**
