@@ -76,6 +76,14 @@ export default Service.extend({
 	},
 
 	/**
+	 * 将查处的Model删除包括所关联的Model，全部删除一个不留
+	 * @param {Model Ember Object} model
+	 */
+	cleanModelInclusionRelation(model) {
+		return this.get('phcache').cleanModelInclusionRelation(model);
+	},
+
+	/**
 	 * 注入Function
 	 * @param {*} funcReference
 	 */

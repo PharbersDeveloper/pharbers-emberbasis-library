@@ -42,8 +42,9 @@ export default Route.extend({
 	actions: {
 		// 你的动作
 		delete() {
-			// let auth = this.get('demo_controller').queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');
-			this.get('demo_controller').removeModelByID('auth', '5b7e454a8fb8076c3c3304l0');
+			let auth = this.get('demo_controller').queryModelByID('auth', '5b7e454a8fb8076c3c3304l0');
+			// this.get('demo_controller').removeModelByID('auth', '5b7e454a8fb8076c3c3304l0');
+			this.get('demo_controller').cleanModelInclusionRelation(auth)
 		},
 		gotopre() {
 			this.transitionTo('application')

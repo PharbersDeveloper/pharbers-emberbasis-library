@@ -5,8 +5,6 @@ import { isArray } from '@ember/array';
 import { isPresent, isEmpty } from '@ember/utils';
 import { assert } from '@ember/debug';
 
-
-
 import {
 	promiseArray,
 	promiseObject

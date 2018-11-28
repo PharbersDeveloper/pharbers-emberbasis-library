@@ -28,6 +28,9 @@ export default Service.extend({
 	resetChangedModelAttr(model) {
 		return this.get('phcache').resetChangedModelAttr(model);
 	},
+	cleanModelInclusionRelation(model) {
+		return this.get('phcache').cleanModelInclusionRelation(model);
+	},
 	injectFunc(funcReference) {
 		return this.get('phinject').injectFunc(funcReference);
 	},
