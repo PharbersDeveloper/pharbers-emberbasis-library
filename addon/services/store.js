@@ -132,11 +132,6 @@ export default DS.Store.extend({
 		return data;
 	},
 
-	/**
-     * 创建Model
-     * @param {String} modelName
-     * @param {Object} inputProperties
-     */
 	__createModel(modelName, inputProperties) {
 		return _createModel(this, modelName, inputProperties);
 	},
@@ -144,44 +139,23 @@ export default DS.Store.extend({
 	__updataModelByID(modelName, id, inputProperties) {
 		return _updataModelByID(this, modelName, id, inputProperties);
 	},
-	/**
-     *
-     * @param {String} modelName
-     * @param {String} id
-     */
+
 	__queryModelByID(modelName, id) {
 		return _queryModelByID(this, modelName, id);
 	},
 
-	/**
-     *
-     * @param {String} modelName
-     */
 	__queryModelByAll(modelName) {
 		return _queryModelByAll(this, modelName);
 	},
 
-	/**
-     *
-     * @param {String} modelName
-     * @param {String} id
-     */
 	__removeModelByID(modelName, id) {
 		_removeModelByID(this, modelName, id);
 	},
 
-	/**
-     *
-     * @param {String} modelName
-     */
 	__removeModelByAll(modelName) {
 		_removeModelByAll(this, modelName);
 	},
 
-	/**
-     *
-     * @param {Model} modelClass
-     */
 	__model2LocalStorge(modelClass) {
 		_model2LocalStorge(modelClass);
 	}

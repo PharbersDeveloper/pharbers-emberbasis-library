@@ -2,7 +2,8 @@
 
 module.exports = function (environment/*, appConfig */) {
 	let ENV = {
-		environment,
+		environment
 	};
+
 	return ENV;
 };

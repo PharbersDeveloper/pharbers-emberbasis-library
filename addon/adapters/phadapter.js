@@ -3,7 +3,7 @@ import DS from 'ember-data';
 import { inject } from '@ember/service';
 import rsvp from 'rsvp';
 
-export function InvalidError(resolve, reject, data) {
+export function invalidError(resolve, reject, data) {
 	if (typeof data.errors !== 'undefined') {
 		return reject(new DS.InvalidError(data.errors));
 	}
@@ -21,30 +21,31 @@ export default DS.JSONAPIAdapter.extend({
 		this.set('headers', {
 			'dataType': 'json',
 			'contentType': 'application/json',
-			'Content-Type': 'application/json'
+			'Content-Type': 'application/json',
+			'Authorization': `bearer 0`
 		});
 	},
 	queryObject(url, store, type, jsonObject) {
-		this.set('headers.Authorization', 'bearer ' + this.get('cookies').read('token'));
+		this.set('headers.Authorization', `bearer ${this.get('cookies').read('token')}`);
 		return new rsvp.Promise((resolve, reject) => {
 			this.ajax(this.get('namespace') + url, 'POST', { data: jsonObject })
-				.then(data => InvalidError(resolve, reject, data))
+				.then(data => invalidError(resolve, reject, data))
 				.catch(() => reject('failed'));
 		});
 	},
 	queryMultipleObject(url, store, type, jsonObject) {
-		this.set('headers.Authorization', 'bearer ' + this.get('cookies').read('token'));
+		this.set('headers.Authorization', `bearer ${this.get('cookies').read('token')}`);
 		return new rsvp.Promise((resolve, reject) => {
 			this.ajax(this.get('namespace') + url, 'POST', { data: jsonObject })
-				.then(data => InvalidError(resolve, reject, data))
+				.then(data => invalidError(resolve, reject, data))
 				.catch(() => reject('failed'));
 		});
 	},
 	transaction(url, store, type, jsonObject) {
-		this.set('headers.Authorization', 'bearer ' + this.get('cookies').read('token'));
+		this.set('headers.Authorization', `bearer ${this.get('cookies').read('token')}`);
 		return new rsvp.Promise((resolve, reject) => {
 			this.ajax(this.get('namespace') + url, 'POST', { data: jsonObject })
-				.then(data => InvalidError(resolve, reject, data))
+				.then(data => invalidError(resolve, reject, data))
 				.catch(() => reject('failed'));
 		});
 	}

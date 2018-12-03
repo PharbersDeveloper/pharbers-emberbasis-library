@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable new-cap */
+
 import DS from 'ember-data';
 import { assert, deprecate } from '@ember/debug';
 import { DEBUG } from '@glimmer/env';
@@ -88,7 +88,7 @@ export default DS.JSONAPISerializer.extend({
 			if (typeof belongsTo !== 'undefined') {
 				if (!isRecursive) {
 					json.relationships = json.relationships || {};
-					json.included = json.included || A();
+					json.included = json.included || new A();
 				}
 				let payloadType = null, payloadKey = this._getMappedKey(key, snapshot.type), data = null;
 
@@ -166,7 +166,7 @@ export default DS.JSONAPISerializer.extend({
 		if (typeof hasMany !== 'undefined') {
 			if (!isRecursive) {
 				json.relationships = json.relationships || {};
-				json.included = json.included || A();
+				json.included = json.included || new A();
 			}
 
 			let payloadKey = this._getMappedKey(key, snapshot.type), data = new Array(hasMany.length);

@@ -3,8 +3,7 @@ import { A } from '@ember/array';
 import { assert } from '@ember/debug';
 
 export default EmberObject.create({
-	// eslint-disable-next-line new-cap
-	listFunc: A(),
+	listFunc: new A(),
 
 	funcInjection(func) {
 		let name = func.name;
