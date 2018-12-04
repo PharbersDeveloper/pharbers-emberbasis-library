@@ -21,11 +21,10 @@
     "dependencies": {
         "ember-auto-import": "^1.2.13",
         "ember-cli-babel": "^7.1.2",
-        "ember-cookies": "^0.3.1",
         "jsencrypt": "^3.0.0-rc.1",
-        "strophe.js": "^1.2.16",
         "pharbers-ember-condition-model": "latest",
-        "pharbers-ember-event-handle": "latest"
+		"pharbers-ember-event-handle": "latest",
+		"pharbers-ember-util-package": "latest"
     },
     "devDependencies": {
         "broccoli-asset-rev": "^2.4.5",

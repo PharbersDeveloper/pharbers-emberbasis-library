@@ -7588,10 +7588,6 @@ strip-json-comments@~2.0.1:
   version "2.0.1"
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
 
-strophe.js@^1.2.16:
-  version "1.2.16"
-  resolved "https://registry.yarnpkg.com/strophe.js/-/strophe.js-1.2.16.tgz#2ac837c9838f364821213a4cd7748789c13912f6"
-
 styled_string@0.0.1:
   version "0.0.1"
   resolved "https://registry.yarnpkg.com/styled_string/-/styled_string-0.0.1.tgz#d22782bd81295459bc4f1df18c4bad8e94dd124a"
