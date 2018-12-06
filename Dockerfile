@@ -1,0 +1,16 @@
+FROM alexqian/ember_cli
+
+MAINTAINER Alex Qian
+
+WORKDIR /app
+
+RUN git clone https://github.com/PharbersDeveloper/pharbers-emberbasis-library.git
+
+WORKDIR pharbers
+
+RUN yarn && \
+    ember b
+
+EXPOSE 4200
+
+ENTRYPOINT ["ember", "s"]
