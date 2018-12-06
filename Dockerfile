@@ -6,7 +6,9 @@ WORKDIR /app
 
 RUN git clone https://github.com/PharbersDeveloper/pharbers-emberbasis-library.git
 
-WORKDIR pharbers
+RUN ls
+
+WORKDIR pharbers-emberbasis-library
 
 RUN yarn && \
     ember b
