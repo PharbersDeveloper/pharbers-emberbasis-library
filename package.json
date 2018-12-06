@@ -1,6 +1,6 @@
 {
     "name": "pharbers-emberbasis-library",
-    "version": "1.0.9",
+    "version": "1.1.0",
     "description": "The default blueprint for ember-cli addons.",
     "keywords": [
         "ember-addon",
