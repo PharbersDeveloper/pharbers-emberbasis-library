@@ -1,6 +1,5 @@
 /* eslint-disable new-cap */
 import DS from 'ember-data';
-import { inject } from '@ember/service';
 import rsvp from 'rsvp';
 
 export function invalidError(resolve, reject, data) {
@@ -11,7 +10,6 @@ export function invalidError(resolve, reject, data) {
 }
 
 export default DS.JSONAPIAdapter.extend({
-	cookies: inject(),
 	namespace: '/',
 	handleResponse() {
 		// 500 501 - 504
@@ -26,7 +24,6 @@ export default DS.JSONAPIAdapter.extend({
 		});
 	},
 	queryObject(url, store, type, jsonObject) {
-		this.set('headers.Authorization', `bearer ${this.get('cookies').read('token')}`);
 		return new rsvp.Promise((resolve, reject) => {
 			this.ajax(this.get('namespace') + url, 'POST', { data: jsonObject })
 				.then(data => invalidError(resolve, reject, data))
@@ -34,7 +31,6 @@ export default DS.JSONAPIAdapter.extend({
 		});
 	},
 	queryMultipleObject(url, store, type, jsonObject) {
-		this.set('headers.Authorization', `bearer ${this.get('cookies').read('token')}`);
 		return new rsvp.Promise((resolve, reject) => {
 			this.ajax(this.get('namespace') + url, 'POST', { data: jsonObject })
 				.then(data => invalidError(resolve, reject, data))
@@ -42,7 +38,6 @@ export default DS.JSONAPIAdapter.extend({
 		});
 	},
 	transaction(url, store, type, jsonObject) {
-		this.set('headers.Authorization', `bearer ${this.get('cookies').read('token')}`);
 		return new rsvp.Promise((resolve, reject) => {
 			this.ajax(this.get('namespace') + url, 'POST', { data: jsonObject })
 				.then(data => invalidError(resolve, reject, data))

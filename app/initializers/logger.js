@@ -29,6 +29,7 @@ export function initialize(application) {
 	application.inject('component', 'logger', 'logger:main');
 	application.inject('controller', 'logger', 'logger:main');
 	application.inject('service', 'logger', 'logger:main');
+	application.inject('adapter', 'logger', 'logger:main');
 }
 
 export default { name: 'logger', initialize };
