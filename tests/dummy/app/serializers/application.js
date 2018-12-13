@@ -11,4 +11,16 @@ export default PharbersSerializer.extend({
 	// payloadKeyFromModelName(modelName) {
 	// 	return classify(modelName);
 	// },
+	keyForAttribute(key) {
+		return key;
+	},
+	keyForRelationship(key) {
+		return classify(key);
+	},
+	payloadKeyFromModelName(modelName) {
+		return classify(modelName);
+	},
+	modelNameFromPayloadKey(modelName) {
+		return modelName;
+	},
 });

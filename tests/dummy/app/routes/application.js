@@ -59,7 +59,7 @@ export default Route.extend({
 		let conditions = this.get('application_route').object2JsonApi(req);
 		this.get('logger').log(conditions)
 
-		return this.get('application_route').queryMultipleObject('api/v1/login/0', 'auth', {});
+		// return this.get('application_route').queryMultipleObject('api/v1/login/0', 'auth', {});
 		// return this.get('application_route').queryObject('api/v1/login/2', 'auth', {});
 
 		// ["北京", "上海", "广东"].forEach((name, index) => {
