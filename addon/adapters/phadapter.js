@@ -1,6 +1,5 @@
 /* eslint-disable new-cap */
 import DS from 'ember-data';
-import { inject } from '@ember/service';
 import rsvp from 'rsvp';
 
 export function invalidError(resolve, reject, data) {
