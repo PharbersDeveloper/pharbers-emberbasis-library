@@ -1,7 +1,7 @@
 {
     "name": "pharbers-emberbasis-library",
-    "version": "2.0.0-beta",
-    "description": "The default blueprint for ember-cli addons.",
+    "version": "2.0.0",
+    "description": "Pharbers Ember 框架",
     "keywords": [
         "ember-addon",
         "pharbers-basis-library"
