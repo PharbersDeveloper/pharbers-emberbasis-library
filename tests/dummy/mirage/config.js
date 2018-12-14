@@ -283,5 +283,50 @@ export default function () {
         //     }
         // }
         return { "errors": [{ "id": "500", "status": "error", "code": "-301", "title": "user email has been use", "detail": "用户邮箱已被使用" }] }
-    });
+	});
+
+	this.post('/api/v1/test',() => {
+		return {
+			"data": {
+				"attributes": {
+					"token": "5c138ef2ffc97ba8e165b5a8b256df71"
+				},
+				"id": "5b8d00b38fb8077b94c39a83",
+				"relationships": {
+					"Profile": {
+						"data": {
+							"id": "5b8d00b38fb8077b94c39a84",
+							"type": "PhProfile"
+						}
+					}
+				},
+				"type": "PhAuth"
+			},
+			"included": [
+				{
+					"attributes": {
+						"companyname": "nhwa"
+					},
+					"id": "5afa53bded925c05c6f69c54",
+					"type": "PhCompany"
+				},
+				{
+					"attributes": {
+						"password": "",
+						"username": "nhwa"
+					},
+					"id": "5b8d00b38fb8077b94c39a84",
+					"relationships": {
+						"Company": {
+							"data": {
+								"id": "5afa53bded925c05c6f69c54",
+								"type": "PhCompany"
+							}
+						}
+					},
+					"type": "PhProfile"
+				}
+			]
+		}
+	})
 }

@@ -34,30 +34,31 @@ export default Route.extend({
 		// this.get('logger').log(json)
 
 
-		let req = this.get('application_controller').createModel('request', {
-			id: '1',
-			res: 'bind_course_region_rep',
-			fmcond: this.get('application_controller').createModel('fmcond', {
-				id: '1',
-				skip: 0,
-				take: 1000
-			}),
-			eqcond: A([
-				this.get('application_controller').createModel('eqcond', {
-					id: '1',
-					key: 'region_id',
-					val: 'a',
-				}),
-				this.get('application_controller').createModel('eqcond', {
-					id: '2',
-					key: 'course_id',
-					val: 12,
-				})]
-			)
-		});
+		// let req = this.get('application_controller').createModel('request', {
+		// 	id: '1',
+		// 	res: 'bind_course_region_rep',
+		// 	fmcond: this.get('application_controller').createModel('fmcond', {
+		// 		id: '1',
+		// 		skip: 0,
+		// 		take: 1000
+		// 	}),
+		// 	eqcond: A([
+		// 		this.get('application_controller').createModel('eqcond', {
+		// 			id: '1',
+		// 			key: 'region_id',
+		// 			val: 'a',
+		// 		}),
+		// 		this.get('application_controller').createModel('eqcond', {
+		// 			id: '2',
+		// 			key: 'course_id',
+		// 			val: 12,
+		// 		})]
+		// 	)
+		// });
 
-		let conditions = this.get('application_route').object2JsonApi(req);
-		this.get('logger').log(conditions)
+		// let conditions = this.get('application_route').object2JsonApi(req);
+		// this.get('logger').log(conditions)
+		// this.get('application_route').queryObject('api/v1/test', 'PhAuth', {});
 
 		// return this.get('application_route').queryMultipleObject('api/v1/login/0', 'auth', {});
 		// return this.get('application_route').queryObject('api/v1/login/2', 'auth', {});
