@@ -8,7 +8,9 @@ const fs = require('fs'),
 	chalk = require('chalk'),
 	stringUtil = require('ember-cli-string-utils'),
 	EmberRouterGenerator = require('ember-router-generator'),
-	isModuleUnificationProject = require('../module-unification').isModuleUnificationProject;
+	isModuleUnificationProject = require('../module-unification').isModuleUnificationProject
+
+let pathOptions = "";
 
 module.exports = {
 	description: 'Generates Pharbers Init Adapter & Serializer',
@@ -30,6 +32,8 @@ module.exports = {
 	fileMapTokens: function (options) {
 		// let temp = this.ui;
 		// temp.writeLine(isModuleUnificationProject(this.project));
+		pathOptions = options;
+
 		return {
 			__route_name__() {
 				if (options.pod) {
@@ -146,6 +150,7 @@ module.exports = {
 	},
 
 	afterInstall: function (options) {
+		this.ui.writeLine("123")
 		updateRouter.call(this, 'add', options);
 	},
 
@@ -154,16 +159,16 @@ module.exports = {
 	}
 };
 
-function appendBusinessRoute(action, name, options) {
-	let routerPath = path.join.apply(null, findBusinessFile(name, options, 'routes')),
+function appendBusinessRoute(name, options, pathOptions) {
+	let routerPath = path.join.apply(null, findBusinessFile(name, options, pathOptions, 'routes')),
 		source = fs.readFileSync(routerPath, 'utf-8'), newSource = '';
 
 	newSource = source.replace('"service": "service",', `${name}_route: service(),\n\t${name}_controller: service(),`);
 	fs.writeFileSync(routerPath, newSource);
 }
 
-function appendBusinessController(action, name, options) {
-	let routerPath = path.join.apply(null, findBusinessFile(name, options, 'controllers')),
+function appendBusinessController(name, options, pathOptions) {
+	let routerPath = path.join.apply(null, findBusinessFile(name, options, pathOptions, 'controllers')),
 		source = fs.readFileSync(routerPath, 'utf-8'), newSource = '';
 
 	newSource = source.replace('"service": "service",', `${name}_controller: service(),`);
@@ -178,33 +183,40 @@ function updateRouter(action, options) {
 		},
 		color = actionColorMap[action] || 'gray';
 
+	if (action !== 'remove') {
+		appendBusinessRoute.call(this, entity.name, options, pathOptions);
+		appendBusinessController.call(this, entity.name, options, pathOptions);
+	}
+
 	if (this.shouldTouchRouter(entity.name, options)) {
 		writeRoute(action, entity.name, options);
 
 		this.ui.writeLine('updating router');
 		this._writeStatusToUI(chalk[color], action + ' route', entity.name);
-
-		if (action !== 'remove') {
-			appendBusinessRoute.call(this, action, entity.name, options);
-			appendBusinessController.call(this, action, entity.name, options);
-		}
 	}
 }
 
-function findBusinessFile(name, options, type) {
+function findBusinessFile(name, options, pathOptions, type) {
 	let routerPathParts = [options.project.root],
-		root = isModuleUnificationProject(options.project) ? 'src' : 'app';
+		root = isModuleUnificationProject(options.project) ? 'src' : 'app',
+		moduleName = "";
 
-	if (options.pod) {
-		root += options.podPath;
+	if (pathOptions.pod) {
+		root += `/${path.join(pathOptions.podPath, pathOptions.locals.moduleName)}`;
+		if (type === 'routes') {
+			moduleName = 'route.js';
+		} else {
+			moduleName = 'controller.js';
+		}
 	} else {
 		root += `/${type}/`;
+		moduleName = name + ".js";
 	}
 
 	if (options.dummy && options.project.isEmberCLIAddon()) {
-		routerPathParts = routerPathParts.concat(['tests', 'dummy', root, name + '.js']);
+		routerPathParts = routerPathParts.concat(['tests', 'dummy', root, moduleName]);
 	} else {
-		routerPathParts = routerPathParts.concat([root, name + '.js']);
+		routerPathParts = routerPathParts.concat([root, moduleName]);
 	}
 
 	return routerPathParts;
