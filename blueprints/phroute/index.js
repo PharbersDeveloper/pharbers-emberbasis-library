@@ -162,7 +162,7 @@ function appendBusinessRoute(name, options, pathOptions) {
 	let routerPath = path.join.apply(null, findBusinessFile(name, options, pathOptions, 'routes')),
 		source = fs.readFileSync(routerPath, 'utf-8'), newSource = '';
 
-	newSource = source.replace('"service": "service",', `${name}_route: service(),\n\t${name}_controller: service(),`);
+	newSource = source.replace('"service": "service",', `${name.replace(/-/g, '_')}_route: service(),\n\t${name.replace(/-/g, '_')}_controller: service(),`);
 	fs.writeFileSync(routerPath, newSource);
 }
 
@@ -170,7 +170,7 @@ function appendBusinessController(name, options, pathOptions) {
 	let routerPath = path.join.apply(null, findBusinessFile(name, options, pathOptions, 'controllers')),
 		source = fs.readFileSync(routerPath, 'utf-8'), newSource = '';
 
-	newSource = source.replace('"service": "service",', `${name}_controller: service(),`);
+	newSource = source.replace('"service": "service",', `${name.replace(/-/g, '_')}_controller: service(),`);
 	fs.writeFileSync(routerPath, newSource);
 }
 

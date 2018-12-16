@@ -1,5 +1,4 @@
 import PharbersAdapter from 'pharbers-emberbasis-library/adapters/phadapter';
-import cookie from 'pharbers-ember-util-package/cookies';
 
 export default PharbersAdapter.extend({
 	namespace: '/',
@@ -8,7 +7,7 @@ export default PharbersAdapter.extend({
 			'dataType': 'json',
 			'contentType': 'application/json',
 			'Content-Type': 'application/json',
-			'Authorization': `bearer ${cookie.create().read('token')}`
+			'Authorization': `bearer ${this.get('cookie').read('token')}`
 		});
 	}
 });
