@@ -150,7 +150,6 @@ module.exports = {
 	},
 
 	afterInstall: function (options) {
-		this.ui.writeLine("123")
 		updateRouter.call(this, 'add', options);
 	},
 
