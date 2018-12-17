@@ -27,14 +27,12 @@ export function serverIncludedSerialize(model, json, existData) {
 	model.eachRelationship((key, descriptor) => {
 		if (descriptor.kind === 'hasMany') {
 			model.get(key).toArray().forEach(result => {
-				let m = {}/*, isExits = 0*/;
+				let m = {}, attributes = m['attributes'] = {};/*, isExits = 0*/
 
 				m['id'] = result.get('id');
 				m['type'] = result.store.serializerFor(result._internalModel.modelName).payloadKeyFromModelName(result._internalModel.modelName);//result.serialize({ includeId: true }).type;
 
 				result.eachAttribute(name => {
-					let attributes = m['attributes'] = {};
-
 					attributes[name] = result.data[name];
 				});
 
@@ -46,7 +44,7 @@ export function serverIncludedSerialize(model, json, existData) {
 				serverIncludedSerialize(result, json, existData);
 			});
 		} else {
-			let m = {}, isExits = 0;
+			let m = {}, isExits = 0, attributes = m['attributes'] = {};
 
 			m['id'] = model.get(key).get('id');
 			m['type'] = model.get(key).store.serializerFor(model.get(key)._internalModel.modelName).payloadKeyFromModelName(model.get(key)._internalModel.modelName);//model.get(key).serialize({ includeId: true }).type;
@@ -55,8 +53,6 @@ export function serverIncludedSerialize(model, json, existData) {
 
 			if (isExits === 0) {
 				model.get(key).eachAttribute(name => {
-					let attributes = m['attributes'] = {};
-
 					attributes[name] = model.get(key).data[name];
 				});
 
@@ -76,14 +72,12 @@ export function serverDataSerialize(model, json) {
 
 	if (isArray(model)) {
 		model.forEach(single => {
-			let m = {};
+			let m = {}, attributes = m['attributes'] = {};
 
 			m['id'] = single.get('id');
 			m['type'] = single.store.serializerFor(single._internalModel.modelName).payloadKeyFromModelName(single._internalModel.modelName);//single.serialize({ includeId: true }).type;
 
 			single.eachAttribute(name => {
-				let attributes = m['attributes'] = {};
-
 				attributes[name] = single.data[name];
 			});
 			json.data.push(m);
@@ -94,14 +88,12 @@ export function serverDataSerialize(model, json) {
 			serverIncludedSerialize(single, json.included, existData);
 		});
 	} else {
-		let m = {};
+		let m = {}, attributes = m['attributes'] = {};
 
 		m['id'] = model.get('id');
 		m['type'] = model.store.serializerFor(model._internalModel.modelName).payloadKeyFromModelName(model._internalModel.modelName);//model.serialize({ includeId: true }).type;
 
 		model.eachAttribute(name => {
-			let attributes = m['attributes'] = {};
-
 			attributes[name] = model.data[name];
 		});
 
