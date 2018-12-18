@@ -1,11 +1,7 @@
 'use strict';
 
-const fs = require('fs');
 const path = require('path');
-const chalk = require('chalk');
 const stringUtil = require('ember-cli-string-utils');
-const EmberRouterGenerator = require('ember-router-generator');
-const isModuleUnificationProject = require('../module-unification').isModuleUnificationProject;
 
 module.exports = {
 	description: 'Generates Pharbers Init Adapter & Serializer',
@@ -25,8 +21,6 @@ module.exports = {
 	],
 
 	fileMapTokens: function(options) {
-		// let temp = this.ui;
-		// temp.writeLine(isModuleUnificationProject(this.project));
 		return {
 			__adapter_name__() {
 				if (options.pod) {
@@ -107,49 +101,8 @@ module.exports = {
 	},
 
 	afterInstall: function(options) {
-		updateRouter.call(this, 'add', options);
 	},
 
 	afterUninstall: function(options) {
-		updateRouter.call(this, 'remove', options);
 	},
 };
-
-function updateRouter(action, options) {
-	let entity = options.entity;
-	let actionColorMap = {
-		add: 'green',
-		remove: 'red',
-	};
-	let color = actionColorMap[action] || 'gray';
-
-	if (this.shouldTouchRouter(entity.name, options)) {
-		writeRoute(action, entity.name, options);
-
-		this.ui.writeLine('updating router');
-		this._writeStatusToUI(chalk[color], action + ' route', entity.name);
-	}
-}
-
-function findRouter(options) {
-	let routerPathParts = [options.project.root];
-	let root = isModuleUnificationProject(options.project) ? 'src' : 'app';
-
-	if (options.dummy && options.project.isEmberCLIAddon()) {
-		routerPathParts = routerPathParts.concat(['tests', 'dummy', root, 'router.js']);
-	} else {
-		routerPathParts = routerPathParts.concat([root, 'router.js']);
-	}
-
-	return routerPathParts;
-}
-
-function writeRoute(action, name, options) {
-	let routerPath = path.join.apply(null, findRouter(options));
-	let source = fs.readFileSync(routerPath, 'utf-8');
-
-	let routes = new EmberRouterGenerator(source);
-	let newRoutes = routes[action](name, options);
-
-	fs.writeFileSync(routerPath, newRoutes.code());
-}
